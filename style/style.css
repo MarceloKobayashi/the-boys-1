@@ -31,7 +31,7 @@
     font-weight: bold;
 }
 
-#dialog-cadastrar {
+dialog {
     padding: 1% 5%;
 
     font-size: 1.5rem;
@@ -39,7 +39,7 @@
     font-weight: 400;
 }
     
-#btn-dialog-cadastrar {
+#btn-dialog-cadastrar, #btn-dialog-excluir {
     padding: 2.5%;
 
     font-size: 1.5rem;
@@ -47,12 +47,12 @@
     font-weight: 400;
 }
 
-#btn-dialog-cadastrar:hover {
+#btn-dialog-cadastrar:hover, #btn-dialog-excluir:hover {
     background-color: green;
     color: #E5E5E5;
 }
 
-#btn-dialog-cancelar {
+#btn-dialog-cadastrar-fechar, #btn-dialog-excluir-fechar {
     padding: 1.5% 3%;
 
     font-size: 2rem;
@@ -64,6 +64,6 @@
     right: 1rem;
 }
 
-#btn-dialog-cancelar:hover {
+#btn-dialog-cadastrar-fechar:hover, #btn-dialog-excluir-fechar:hover {
     background-color: red;
 }
