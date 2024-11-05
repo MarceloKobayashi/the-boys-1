@@ -39,7 +39,7 @@ dialog {
     font-weight: 400;
 }
     
-#btn-dialog-cadastrar, #btn-dialog-excluir {
+#btn-dialog-cadastrar, #btn-dialog-excluir, #btn-dialog-alterar {
     padding: 2.5%;
 
     font-size: 1.5rem;
@@ -47,12 +47,12 @@ dialog {
     font-weight: 400;
 }
 
-#btn-dialog-cadastrar:hover, #btn-dialog-excluir:hover {
+#btn-dialog-cadastrar:hover, #btn-dialog-excluir:hover, #btn-dialog-alterar:hover {
     background-color: green;
     color: #E5E5E5;
 }
 
-#btn-dialog-cadastrar-fechar, #btn-dialog-excluir-fechar {
+#btn-dialog-cadastrar-fechar, #btn-dialog-excluir-fechar, #btn-dialog-alterar-fechar {
     padding: 1.5% 3%;
 
     font-size: 2rem;
@@ -64,6 +64,10 @@ dialog {
     right: 1rem;
 }
 
-#btn-dialog-cadastrar-fechar:hover, #btn-dialog-excluir-fechar:hover {
+#btn-dialog-cadastrar-fechar:hover, #btn-dialog-excluir-fechar:hover, #btn-dialog-alterar-fechar:hover {
     background-color: red;
+}
+
+a {
+    text-decoration: none;
 }
