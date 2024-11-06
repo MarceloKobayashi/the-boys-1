@@ -4,9 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Heróis</title>
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/lista.css">
 </head>
 <body>
-    <h1>Lista de herois</h1>
+    <div id="header">
+        <a href="heroes.html">
+            <button id="btn-home"><i class="fas fa-home"></i>Home</button>
+        </a>
+        <h1 id="titulo">Lista de herois</h1>
+    </div>
+    
+    <div id="filtros">
+        <input type="text" id="input-nome" placeholder="Buscar herói por nome.">
+        
+        <select id="input-status">
+            <option value="">Status - Todos</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+            <option value="Banido">Banido</option>
+        </select>
+        
+        <select id="input-popularidade">
+            <option value="">Popularidade</option>
+            <option value="asc">Crescente</option>
+            <option value="desc">Decrescente</option>
+        </select>
+        
+        <button id="btn-busca-nome-status">Buscar</button>
+        <button id="btn-todos">Todos</button>
+    </div>
+    
+    <table id="tabela-herois">
+        <thead>
+            <tr>
+                <th>Nome Real</th>
+                <th>Nome Herói</th>
+                <th>Sexo</th>
+                <th>Altura</th>
+                <th>Peso</th>
+                <th>Data Nasc.</th>
+                <th>Local Nasc.</th>
+                <th>Força</th>
+                <th>Popularidade</th>
+                <th>Status</th>
+                <th>Vitórias</th>
+                <th>Derrotas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--Dados dos heróis serão preenchidos aqui-->
+        </tbody>
+    </table>
+
+    <script src="js/lista.js"></script>
 </body>
 </html>
