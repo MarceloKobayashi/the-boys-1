@@ -85,7 +85,7 @@
 #btns-lista {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 5px;
 }
 
 .btn-excluir, .btn-editar {
