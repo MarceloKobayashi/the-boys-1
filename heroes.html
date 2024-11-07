@@ -28,6 +28,9 @@
         <h2>Cadastrar Herói</h2>
 
         <form id="form-cadastrar">
+            <label for="imagem-url">URL da Imagem:</label>
+            <input type="url" name="imagem-url" id="imagem-url" placeholder="Digite a URL da imagem do herói">
+
             <label for="nome-real">Nome Real:</label>
             <input type="text" id="nome-real" name="nome-real" required><br><br>
 
@@ -40,8 +43,8 @@
                 <option value="feminino">Feminino</option>
             </select><br><br>
 
-            <label for="altura">Altura (em cm):</label>
-            <input type="number" id="altura" name="altura" min="50" max="300" required><br><br>
+            <label for="altura">Altura (em m):</label>
+            <input type="number" id="altura" name="altura" min="0.5" max="3" step="0.01" required><br><br>
 
             <label for="peso">Peso (em kg):</label>
             <input type="number" id="peso" name="peso" min="30" max="500" required><br><br>

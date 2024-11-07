@@ -22,6 +22,36 @@ db.connect((err) => {
 
 //Permitir requisições
 app.use(cors({ origin: 'http://127.0.0.1:5500' }));
+app.use(express.json());
+
+app.post('/api/herois', (req, res) => {
+    const { 
+        imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas 
+    } = req.body;
+
+    const query = `
+        INSERT INTO heroi (imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
+                            nivel_forca, popularidade, status_heroi, vitorias, derrotas)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)                    
+    `;
+
+    const values = [
+        imagem_heroi, nome_real, nome_heroi, sexo, altura, peso,
+        data_nasc, local_nasc, nivel_forca, popularidade, status_heroi,
+        vitorias || 0, derrotas || 0
+    ];
+
+    db.query(query, values, (error, resultado) => {
+        if (error) {
+            console.error("Erro ao cadastrar herói:", error);
+            return res.status(500).json({ message: "Erro ao cadastrar herói." });
+        }
+
+        res.status(201).json({ message: "Herói cadastrado com sucesso." });
+    });
+
+});
 
 app.get('/api/herois', (req, res) => {
     const { nome, status, popularidade } = req.query;
@@ -30,7 +60,7 @@ app.get('/api/herois', (req, res) => {
     let conditions = [];
 
     if (nome) {
-        conditions.push(`nome_heroi LIKE '%${nome}%'`);
+        conditions.push(`(nome_heroi LIKE '%${nome}%' OR nome_real LIKE '%${nome}%')`);
     }
 
     if (status) {

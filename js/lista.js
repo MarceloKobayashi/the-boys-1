@@ -21,7 +21,10 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
             const status = heroi.status_heroi.charAt(0).toUpperCase() + heroi.status_heroi.slice(1).toLowerCase();
                 
             linha.innerHTML = `
-            <td><button class="btn-excluir" data-id="${heroi.id_heroi}">Excluir</button></td>
+            <td id="btns-lista">
+                <button class="btn-excluir" data-id="${heroi.id_heroi}">Excluir</button>
+                <button class="btn-editar" data-id="${heroi.id_heroi}">Editar</button>
+            </td>
             <td><img src="${heroi.imagem_heroi}" alt="${heroi.nome_heroi}" style="width: 50px; height: auto; border-radius: 5px;"></td>
             <td>${heroi.nome_real}</td>
             <td>${heroi.nome_heroi}</td>
