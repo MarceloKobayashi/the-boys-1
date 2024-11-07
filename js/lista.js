@@ -21,6 +21,8 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
             const status = heroi.status_heroi.charAt(0).toUpperCase() + heroi.status_heroi.slice(1).toLowerCase();
                 
             linha.innerHTML = `
+            <td><button class="btn-excluir" data-id="${heroi.id_heroi}">Excluir</button></td>
+            <td><img src="${heroi.imagem_heroi}" alt="${heroi.nome_heroi}" style="width: 50px; height: auto; border-radius: 5px;"></td>
             <td>${heroi.nome_real}</td>
             <td>${heroi.nome_heroi}</td>
             <td>${sexo}</td>
@@ -62,6 +64,38 @@ document.getElementById("input-nome").addEventListener("keydown", (event) => {
         document.getElementById("btn-busca-nome-status").click();
     }
 });
+
+document.getElementById("tabela-herois").addEventListener("click", async (event) => {
+    if (event.target && event.target.classList.contains("btn-excluir")) {
+
+        const idHeroi = event.target.getAttribute("data-id");
+        const confirmar = confirm("Tem certeza que deseja excluir este herói?");
+
+        if (confirmar) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/herois/${idHeroi}`, {
+                    
+                    method: "DELETE",
+                });
+                
+                if (response) {
+                    alert("Herói deletado com sucesso.");
+
+                    const nomeBusca = document.getElementById("input-nome").value;
+                    const statusBusca = document.getElementById("input-status").value;
+                    const popularidadeBusca = document.getElementById("input-popularidade").value;
+                
+                    listarHerois(nomeBusca, statusBusca, popularidadeBusca);
+                } else {
+                    alert("Erro ao excluir herói.");
+                }
+            } catch (error) {
+                console.error("Erro ao excluir herói: ", error);
+            }
+        }
+    }
+});
+
 
 function formatarData(data) {
     const dataObj = new Date(data);

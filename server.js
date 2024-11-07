@@ -51,6 +51,26 @@ app.get('/api/herois', (req, res) => {
     });
 });
 
+app.delete('/api/herois/:id', (req, res) => {
+    const idHeroi = req.params.id;
+
+    const query = 'DELETE FROM heroi WHERE id_heroi = ?';
+    
+    db.query(query, [idHeroi], (error, resultado) => {
+
+        if (error) {
+            console.error("Erro ao excluir herói:", error);
+            return res.status(500).send({ message: "Erro ao excluir herói." });
+        }
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).send({ message: "Herói não encontrado." });
+        }
+
+        res.status(200).send({ message: 'Herói excluído com sucesso' });
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
