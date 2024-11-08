@@ -81,6 +81,64 @@ app.get('/api/herois', (req, res) => {
     });
 });
 
+//Pegar info de um herói específico para colocar na edição
+app.get('/api/herois/:id', (req, res) => {
+    const idHeroi = req.params.id;
+
+    const query = 'SELECT * FROM heroi WHERE id_heroi = ?';
+
+    db.query(query, [idHeroi], (error, resultado) => {
+        if (error) {
+            console.error("Erro ao buscar herói: ", error);
+            return res.status(500).json({ message: "Erro ao buscar herói." });
+        }
+
+        if (resultado.length === 0) {
+            return res.status(404).json({ message: "Herói não encontrado." });
+        }
+        
+        res.status(200).json(resultado[0]);
+    });
+
+});
+
+app.put('/api/herois/:id', (req, res) => {
+    const idHeroi = req.params.id;
+
+    const {
+        imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas
+    } = req.body;
+
+    const query = `
+        UPDATE heroi
+        SET imagem_heroi = ?, nome_real = ?, nome_heroi = ?, sexo = ?, altura = ?,
+            peso = ?, data_nasc = ?, local_nasc = ?, nivel_forca = ?, popularidade = ?,
+            status_heroi = ?, vitorias = ?, derrotas = ?
+        WHERE id_heroi = ?
+    `;
+
+    const values = [
+        imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas, idHeroi
+    ];
+
+    db.query(query, values, (error, resultado) => {
+        if (error) {
+            console.error("Erro ao atualizar herói: ", error);
+            return res.status(500).json({ message: "Erro ao atualizar herói." });
+        }
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ message: "Herói não encontrado." });
+        }
+
+        res.status(200).json({ message: "Herói atualizado com sucesso." });
+
+    });
+
+});
+
 app.delete('/api/herois/:id', (req, res) => {
     const idHeroi = req.params.id;
 

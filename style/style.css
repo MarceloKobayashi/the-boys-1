@@ -30,21 +30,14 @@
     color: #E5E5E5;
     font-weight: bold;
 }
-
-dialog {
-    padding: 1% 5%;
-
-    font-size: 1.5rem;
-    font-family: "Nanum Gothic Coding", monospace;
-    font-weight: 400;
-}
     
 #btn-dialog-cadastrar, #btn-dialog-excluir, #btn-dialog-alterar {
-    padding: 2.5%;
-
+    cursor: pointer;
+    border-radius: 0.3125rem;
+    padding: 0.5rem 0.8rem;
+    
     font-size: 1.5rem;
     font-family: "Nanum Gothic Coding", monospace;
-    font-weight: 400;
 }
 
 #btn-dialog-cadastrar:hover, #btn-dialog-excluir:hover, #btn-dialog-alterar:hover {
@@ -53,12 +46,12 @@ dialog {
 }
 
 #btn-dialog-cadastrar-fechar, #btn-dialog-excluir-fechar, #btn-dialog-alterar-fechar {
-    padding: 1.5% 3%;
-
+    cursor: pointer;
+    border-radius: 0.3125rem;
+    padding: 0.8rem 1.3rem;
+    
     font-size: 2rem;
     font-family: "Nanum Gothic Coding", monospace;
-    font-weight: 400;
-
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -70,4 +63,38 @@ dialog {
 
 a {
     text-decoration: none;
+}
+
+#dialog-cadastrar form {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+    width: 100%;
+}
+
+#dialog-cadastrar label {
+    font-size: 1rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#dialog-cadastrar input, #dialog-cadastrar select {
+    width: 100%;
+    margin: 0;
+    border-radius: 0.3125rem;
+    border: 0.0625rem solid black;
+
+    font-size: 1rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#dialog-cadastrar .linha-dupla {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+#dialog-cadastrar .linha-tripla {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
 }

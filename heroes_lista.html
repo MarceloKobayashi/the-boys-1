@@ -58,6 +58,91 @@
         </tbody>
     </table>
 
+    <dialog id="editar-heroi-dialog">
+        <h2>Editar Herói</h2>
+        
+        <form id="form-editar-heroi" method="dialog">
+
+            <label>Imagem:</label>
+            <input type="url" id="editar-imagem-heroi" name="imagem_heroi"/>
+
+            <input type="hidden" id="editar-id" name="id_heroi" />
+            
+            <div class="linha-dupla">
+                <div>
+                    <label>Nome Real:</label>
+                    <input type="text" id="editar-nome-real" name="nome_real" required readonly disabled/>
+                </div>
+                <div>
+                    <label>Nome Herói:</label>
+                    <input type="text" id="editar-nome-heroi" name="nome_heroi" required />
+                </div>
+            </div>
+    
+            <div class="linha-tripla">
+                <div>    
+                    <label>Sexo:</label>
+                    <select id="editar-sexo" name="sexo" required disabled>
+                        <option value="m">Masculino</option>
+                        <option value="f">Feminino</option>
+                    </select>
+                </div>    
+                <div>    
+                    <label>Altura (m):</label>
+                    <input type="number" id="editar-altura" name="altura" step="0.01" required />
+                </div>
+                <div>
+                    <label>Peso (kg):</label>
+                    <input type="number" id="editar-peso" name="peso" step="0.01" required />
+                </div>
+            </div>
+                
+            <div class="linha-dupla">
+                <div>
+                    <label>Data de Nascimento:</label>
+                    <input type="date" id="editar-data-nasc" name="data_nasc" required readonly disabled/>
+                </div>
+                <div>
+                    <label>Local de Nascimento:</label>
+                    <input type="text" id="editar-local-nasc" name="local_nasc" required readonly disabled/>
+                </div>                
+            </div>
+            
+            <div class="linha-dupla">
+                <div>
+                    <label>Nível de Força:</label>
+                    <input type="number" id="editar-nivel-forca" name="nivel_forca" min="0" max="100" required />
+                </div>
+                <div>
+                    <label>Popularidade:</label>
+                    <input type="number" id="editar-popularidade" name="popularidade" min="0" max="100" required />
+                </div>
+            </div>
+            
+            <div class="linha-tripla">
+                <div>
+                    <label>Status:</label>
+                    <select id="editar-status" name="status_heroi" required>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                        <option value="banido">Banido</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Vitórias:</label>
+                    <input type="number" id="editar-vitorias" name="vitorias" required />
+                </div>
+                <div>
+                    <label>Derrotas:</label>
+                    <input type="number" id="editar-derrotas" name="derrotas" required />
+                </div>
+            </div>
+    
+            <button type="button" id="salvar-edicao">Salvar</button>
+            <button type="button" id="btn-sair-edicao">Cancelar</button>
+        </form>
+    </dialog>
+
     <script src="js/lista.js"></script>
 </body>
 </html>
