@@ -1,9 +1,11 @@
-#titulo {
-    font-size: 3rem;
+#titulos {
+    text-align: center;
+    margin: 0 auto;
+    padding: 0.7rem;
+
     font-family: "Nanum Gothic Coding", monospace;
     font-weight: 400;
-
-    text-align: center;
+    font-style: normal;
 }
 
 .btn {
@@ -11,7 +13,7 @@
     margin-bottom: 3rem;
 }
 
-#btn-cadastrar, #btn-excluir, #btn-alterar, #btn-mostrar {
+#btn-herois, #btn-crimes {
     width: 31.25rem;
     padding: 2% 9.4%;
     border-radius: 0.5rem;
@@ -24,77 +26,11 @@
     margin: auto;
 }
 
-#btn-cadastrar:hover, #btn-excluir:hover, #btn-alterar:hover, #btn-mostrar:hover {
-
+#btn-herois:hover, #btn-crimes:hover {
     background-color: black;
     color: #E5E5E5;
-    font-weight: bold;
-}
-    
-#btn-dialog-cadastrar, #btn-dialog-excluir, #btn-dialog-alterar {
-    cursor: pointer;
-    border-radius: 0.3125rem;
-    padding: 0.5rem 0.8rem;
-    
-    font-size: 1.5rem;
-    font-family: "Nanum Gothic Coding", monospace;
-}
-
-#btn-dialog-cadastrar:hover, #btn-dialog-excluir:hover, #btn-dialog-alterar:hover {
-    background-color: green;
-    color: #E5E5E5;
-}
-
-#btn-dialog-cadastrar-fechar, #btn-dialog-excluir-fechar, #btn-dialog-alterar-fechar {
-    cursor: pointer;
-    border-radius: 0.3125rem;
-    padding: 0.8rem 1.3rem;
-    
-    font-size: 2rem;
-    font-family: "Nanum Gothic Coding", monospace;
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-}
-
-#btn-dialog-cadastrar-fechar:hover, #btn-dialog-excluir-fechar:hover, #btn-dialog-alterar-fechar:hover {
-    background-color: red;
 }
 
 a {
     text-decoration: none;
-}
-
-#dialog-cadastrar form {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: 1fr;
-    width: 100%;
-}
-
-#dialog-cadastrar label {
-    font-size: 1rem;
-    font-family: "Nanum Gothic Coding", monospace;
-}
-
-#dialog-cadastrar input, #dialog-cadastrar select {
-    width: 100%;
-    margin: 0;
-    border-radius: 0.3125rem;
-    border: 0.0625rem solid black;
-
-    font-size: 1rem;
-    font-family: "Nanum Gothic Coding", monospace;
-}
-
-#dialog-cadastrar .linha-dupla {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-#dialog-cadastrar .linha-tripla {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1rem;
 }

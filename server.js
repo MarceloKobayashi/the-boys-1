@@ -193,6 +193,66 @@ app.delete('/api/herois/:id', (req, res) => {
     });
 });
 
+//CRIMES
+app.get('/api/crimes', (req, res) => {
+    const { nome_heroi, severidade } = req.query;
+
+    let query = `
+        SELECT c.id_crime, c.nome_crime, c.descricao_crime, c.data_crime, c.severidade_crime,
+            h.id_heroi, h.imagem_heroi, h.nome_heroi
+        FROM herois.crimes c
+        JOIN herois.heroi_crime hc ON c.id_crime = hc.fk_id_crime_hc
+        JOIN herois.heroi h ON hc.fk_id_heroi_hc = h.id_heroi
+    `;
+
+    let conditions = [];
+
+    if (nome_heroi) {
+        conditions.push(`h.nome_heroi LIKE '%${nome_heroi}%'`);
+    }
+
+    if (conditions.length > 0) {
+        query += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    if (severidade) {
+        query += ` ORDER BY severidade_crime ${severidade}`;
+    }
+
+    db.query(query, (error, resultado) => {
+        if (error) {
+            console.error("Erro ao listar crimes: ", error);
+            return res.status(500).json({ message: "Erro ao listar crimes." });
+        }
+
+        const crimes = resultado.reduce((acc, row) => {
+            const crime = acc.find(c => c.id_crime === row.id_crime);
+            const heroi = {
+                id_heroi: row.id_heroi,
+                nome_heroi: row.nome_heroi,
+                imagem_heroi: row.imagem_heroi
+            };
+
+            if (crime) {
+                crime.herois.push(heroi);
+            } else {
+                acc.push({
+                    id_crime: row.id_crime,
+                    nome_crime: row.nome_crime,
+                    descricao_crime: row.descricao_crime,
+                    data_crime: row.data_crime,
+                    severidade_crime: row.severidade_crime,
+                    herois: [heroi]
+                });
+            }
+
+            return acc;
+        }, []);
+
+        res.json(crimes);
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });

@@ -20,7 +20,7 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
             const sexo = heroi.sexo.toUpperCase();
             const status = heroi.status_heroi.charAt(0).toUpperCase() + heroi.status_heroi.slice(1).toLowerCase();
 
-            const poderes = heroi.poderes && heroi.poderes.length > 0 ? `<ul>${heroi.poderes.map(poder => `<li>${poder.nome_poder}:</strong></li>`).join('')}</ul>`:'Nenhum poder registrado';
+            const poderes = heroi.poderes && heroi.poderes.length > 0 ? `<ul>${heroi.poderes.map(poder => `<li>${poder.nome_poder}</strong></li>`).join('')}</ul>`:'Nenhum poder registrado';
                 
             linha.innerHTML = `
             <td id="btns-lista">

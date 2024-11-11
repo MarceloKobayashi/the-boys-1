@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crimes</title>
+    <link rel="stylesheet" href="style/crimes.css">
+</head>
+<body>
+    <div id="header">
+        <a href="index.html">
+            <button id="btn-home"><i class="fas fa-home"></i>Home</button>
+        </a>
+        <h1 id="titulo">Lista de Crimes</h1>
+    </div>
+
+    <div id="filtros">
+        <input type="text" id="input-nome" placeholder="Buscar crime por herói.">
+            
+        <select id="input-severidade">
+            <option value="">Severidade</option>
+            <option value="asc">Crescente</option>
+            <option value="desc">Decrescente</option>
+        </select>
+        
+        <button id="btn-busca-nome-status">Buscar</button>
+        <button id="btn-todos">Todos</button>
+    </div>
+    <table id="tabela-crimes">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Crime</th>
+                <th>Descrição</th>
+                <th>Data Crime</th>
+                <th>Severidade</th>
+                <th>Imagem</th>
+                <th>Nome Heroi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!--Dados dos heróis serão preenchidos aqui-->
+        </tbody>
+    </table>
+
+    <script src="js/crime.js"></script>
+</body>
+</html>
