@@ -19,6 +19,8 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
             const dataNasc = formatarData(heroi.data_nasc);
             const sexo = heroi.sexo.toUpperCase();
             const status = heroi.status_heroi.charAt(0).toUpperCase() + heroi.status_heroi.slice(1).toLowerCase();
+
+            const poderes = heroi.poderes && heroi.poderes.length > 0 ? `<ul>${heroi.poderes.map(poder => `<li>${poder.nome_poder}:</strong></li>`).join('')}</ul>`:'Nenhum poder registrado';
                 
             linha.innerHTML = `
             <td id="btns-lista">
@@ -38,6 +40,7 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
             <td>${status}</td>
             <td>${heroi.vitorias}</td>
             <td>${heroi.derrotas}</td>
+            <td>${poderes}</td>
             `;
         });
     } catch (error) {
@@ -122,6 +125,7 @@ document.getElementById("tabela-herois").addEventListener("click", async (event)
             document.getElementById("editar-status").value = heroi.status_heroi.toLowerCase();
             document.getElementById("editar-vitorias").value = heroi.vitorias;
             document.getElementById("editar-derrotas").value = heroi.derrotas;
+
 
             document.getElementById("editar-heroi-dialog").showModal();
 

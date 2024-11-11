@@ -55,7 +55,11 @@ app.post('/api/herois', (req, res) => {
 
 app.get('/api/herois', (req, res) => {
     const { nome, status, popularidade } = req.query;
-    let query = 'SELECT * FROM heroi';
+    let query = `
+        SELECT h.*, p.nome_poder
+        FROM heroi as h
+        LEFT JOIN poderes as p ON h.id_heroi = p.fk_id_heroi_poder
+    `;
 
     let conditions = [];
 
@@ -77,7 +81,23 @@ app.get('/api/herois', (req, res) => {
 
     db.query(query, (error, resultado) => {
         if (error) throw error;
-        res.json(resultado);
+
+        const herois = resultado.reduce((acc, row) => {
+            const heroi = acc.find(h => h.id_heroi === row.id_heroi);
+            const poder = { nome_poder: row.nome_poder, descricao_poder: row.descricao_poder };
+            
+            if (heroi) {
+                if (poder.nome_poder) heroi.poderes.push(poder);
+            } else {
+                acc.push({
+                    ...row,
+                    poderes: poder.nome_poder ? [poder] : []
+                });
+            }
+            return acc;
+        }, []);
+        
+        res.json(herois);
     });
 });
 
@@ -85,7 +105,12 @@ app.get('/api/herois', (req, res) => {
 app.get('/api/herois/:id', (req, res) => {
     const idHeroi = req.params.id;
 
-    const query = 'SELECT * FROM heroi WHERE id_heroi = ?';
+    const query = `
+        SELECT h.*, p.nome_poder
+        FROM heroi AS h
+        LEFT JOIN poderes AS p ON h.id_heroi = p.fk_id_heroi_poder
+        WHERE h.id_heroi = ?
+    `;
 
     db.query(query, [idHeroi], (error, resultado) => {
         if (error) {
@@ -97,7 +122,16 @@ app.get('/api/herois/:id', (req, res) => {
             return res.status(404).json({ message: "Herói não encontrado." });
         }
         
-        res.status(200).json(resultado[0]);
+        const heroi = {
+            ...resultado[0],
+            poderes: resultado
+                .filter(row => row.nome_poder)
+                .map(row => ({
+                    nome_poder: row.nome_poder
+                }))
+        };
+
+        res.status(200).json(heroi);
     });
 
 });
