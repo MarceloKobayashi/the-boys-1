@@ -63,6 +63,32 @@ document.getElementById("input-nome").addEventListener("keydown", (event) => {
     }
 });
 
+document.getElementById("tabela-crimes").addEventListener("click", async (event) => {
+    if (event.target && event.target.classList.contains("btn-excluir")) {
+        
+        const idCrime = event.target.getAttribute("data-id");
+        const confirmar = confirm("Tem certeza que deseja excluir esse crime?");
+
+        if (confirmar) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/crimes/${idCrime}`, {
+                    method: "DELETE",
+                });
+            
+                if (response) {
+                    alert("Crime deletado com sucesso.");
+
+                    listarCrimes();
+                } else {
+                    alert("Erro ao excluir crime.");
+                }
+            } catch (error) {
+                console.error("Erro ao excluir crime: ", error);
+            }
+        }
+    }
+});
+
 function formatarData(data) {
     const dataObj = new Date(data);
     const dia = `${String(dataObj.getDate()).padStart(2, '0')}`;

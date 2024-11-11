@@ -253,6 +253,26 @@ app.get('/api/crimes', (req, res) => {
     });
 });
 
+app.delete('/api/crimes/:id', (req, res) => {
+    const idCrime = req.params.id;
+
+    const query = 'DELETE FROM crimes WHERE id_crime = ?';
+    
+    db.query(query, [idCrime], (error, resultado) => {
+
+        if (error) {
+            console.error("Erro ao excluir crime:", error);
+            return res.status(500).send({ message: "Erro ao excluir crime." });
+        }
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).send({ message: "Crime não encontrado." });
+        }
+
+        res.status(200).send({ message: 'Crime excluído com sucesso' });
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
