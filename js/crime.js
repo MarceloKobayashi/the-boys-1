@@ -67,24 +67,37 @@ document.getElementById("tabela-crimes").addEventListener("click", async (event)
     if (event.target && event.target.classList.contains("btn-excluir")) {
         
         const idCrime = event.target.getAttribute("data-id");
-        const confirmar = confirm("Tem certeza que deseja excluir esse crime?");
 
-        if (confirmar) {
-            try {
-                const response = await fetch(`http://localhost:3000/api/crimes/${idCrime}`, {
-                    method: "DELETE",
-                });
-            
-                if (response) {
-                    alert("Crime deletado com sucesso.");
+        try {
+            const response = await fetch(`http://localhost:3000/api/crimes/${idCrime}`);
+            const crime = await response.json();
 
-                    listarCrimes();
-                } else {
-                    alert("Erro ao excluir crime.");
+            const dataCrime = new Date(crime.data_crime);
+            const dataAtual = new Date();
+            const diffAnos = dataAtual.getFullYear() - dataCrime.getFullYear();
+        
+            if (diffAnos >= 6) {
+                const confirmar = confirm("Tem certeza que deseja excluir esse crime?");
+
+                if (confirmar) {
+                    const deleteResponse = await fetch(`http://localhost:3000/api/crimes/${idCrime}`, {
+                        method: "DELETE",
+                    });
+
+                    if (deleteResponse.ok) {
+                        alert("Crime deletado com sucesso.");
+        
+                        listarCrimes();
+                    } else {
+                        alert("Erro ao excluir crime.");
+                    }
                 }
-            } catch (error) {
-                console.error("Erro ao excluir crime: ", error);
+            } else {
+                alert("O crime não pode ser deletado, pois não se passaram 6 anos desde o ocorrido.");
             }
+
+        } catch (error) {
+            console.error("Erro ao excluir crime: ", error);
         }
     }
 });
