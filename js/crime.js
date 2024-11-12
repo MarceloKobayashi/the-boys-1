@@ -1,9 +1,10 @@
-async function listarCrimes(nome_heroi = '', severidade = '') {
+async function listarCrimes(nome_heroi = '', severidade = '', data = '') {
     try {
         const url = new URL('http://localhost:3000/api/crimes');
         
         if (nome_heroi) url.searchParams.append('nome_heroi', nome_heroi);
         if (severidade) url.searchParams.append('severidade', severidade);
+        if (data) url.searchParams.append('data', data);
         
         const response = await fetch(url);
         const crimes = await response.json();
@@ -45,13 +46,15 @@ async function listarCrimes(nome_heroi = '', severidade = '') {
 document.getElementById("btn-busca-nome-status").addEventListener("click", () => {
     const nomeHeroi = document.getElementById("input-nome").value;
     const severidade = document.getElementById("input-severidade").value;
+    const data = document.getElementById("input-data").value;
 
-    listarCrimes(nomeHeroi, severidade);
+    listarCrimes(nomeHeroi, severidade, data);
 });
 
 document.getElementById("btn-todos").addEventListener("click", () => {
     document.getElementById("input-nome").value = "";
     document.getElementById("input-severidade").value = "";
+    document.getElementById("input-data").value = "";
 
     listarCrimes();
 });
@@ -110,6 +113,47 @@ function formatarData(data) {
     
     return `${dia}/${mes}/${ano}`;
 }
+
+document.getElementById("btn-cadastrar-crime").addEventListener("click", () => {
+    document.getElementById("dialog-cadastrar").showModal();
+});
+
+document.getElementById("btn-dialog-cadastrar-fechar").addEventListener("click", () => {
+    document.getElementById("dialog-cadastrar").close();
+});
+
+document.getElementById("form-cadastrar").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const crimeData = {
+        nome_crime: formData.get("nome-crime"),
+        descricao_crime: formData.get("desc-crime"),
+        data_crime: formData.get("data-crime"),
+        severidade_crime: formData.get("severidade"),
+        nome_heroi: formData.get("nome-heroi")
+    };
+
+    try {
+        const response = await fetch("http://localhost:3000/api/crimes", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(crimeData)
+        });
+        
+        if (response.ok) {
+            alert("Crime cadastrado com sucesso!");
+            document.getElementById("dialog-cadastrar").close();
+            listarCrimes();
+        } else {
+            alert("Erro ao cadastrar crime.");
+        }
+    } catch (error) {
+        console.error("Erro ao cadastrar crime: ", error);
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     listarCrimes();

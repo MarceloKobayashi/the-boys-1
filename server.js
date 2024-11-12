@@ -195,7 +195,7 @@ app.delete('/api/herois/:id', (req, res) => {
 
 //CRIMES
 app.get('/api/crimes', (req, res) => {
-    const { nome_heroi, severidade } = req.query;
+    const { nome_heroi, severidade, data } = req.query;
 
     let query = `
         SELECT c.id_crime, c.nome_crime, c.descricao_crime, c.data_crime, c.severidade_crime,
@@ -215,8 +215,12 @@ app.get('/api/crimes', (req, res) => {
         query += ' WHERE ' + conditions.join(' AND ');
     }
 
-    if (severidade) {
+    if (severidade && data) {
+        query += ` ORDER BY severidade_crime ${severidade}, data_crime ${data}`;
+    } else if (severidade) {
         query += ` ORDER BY severidade_crime ${severidade}`;
+    } else if (data) {
+        query += ` ORDER BY data_crime ${data}`;
     }
 
     db.query(query, (error, resultado) => {
@@ -311,6 +315,62 @@ app.delete('/api/crimes/:id', (req, res) => {
         }
 
         res.status(200).send({ message: 'Crime excluído com sucesso' });
+    });
+});
+
+app.post('/api/crimes', (req, res) => {
+    const { nome_crime, descricao_crime, data_crime, severidade_crime, nome_heroi } = req.body;
+
+    const query = `
+        INSERT INTO crimes (nome_crime, descricao_crime, data_crime, severidade_crime)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(query, [nome_crime, descricao_crime, data_crime, severidade_crime], (error, resultado) => {
+        if (error) {
+            console.error("Erro ao cadastrar crime: ", error);
+            return res.status(500).json({ message: "Erro ao cadastrar crime." });
+        }
+
+        const crimeId = resultado.insertId; //Pega o ID do último registro inserido
+        const heroiQuery = `
+            INSERT INTO heroi_crime (fk_id_heroi_hc, fk_id_crime_hc)
+            VALUES ((SELECT id_heroi FROM heroi WHERE nome_heroi = ?), ?)
+        `;
+
+        db.query(heroiQuery, [nome_heroi, crimeId], (err) => {
+            if (err) {
+                console.error("Erro ao associar crime ao herói: ", err);
+                return res.status(500).json({ message: "Erro ao associar crime ao herói." });
+            }
+
+            const popularidadeQuery = `
+                SELECT popularidade FROM heroi WHERE nome_heroi = ?
+            `;
+
+            db.query(popularidadeQuery, [nome_heroi], (erro, result) => {
+                if (erro) {
+                    console.error("Erro ao buscar popularidade de herói: ", erro);
+                    return res.status(500).json({ message: "Erro ao buscar popularidade de herói." });
+                }
+
+                const popularidadeAtual = result[0].popularidade;
+                const novaPopularidade = Math.max(0, popularidadeAtual - (severidade_crime * 3));
+
+                const updatePopularidadeQuery = `
+                    UPDATE heroi SET popularidade = ? WHERE nome_heroi = ?
+                `;
+
+                db.query(updatePopularidadeQuery, [novaPopularidade, nome_heroi], (x) => {
+                    if (x) {
+                        console.error("Erro ao atualizar popularidade do herói: ", x);
+                        return res.status(500).json({ message: "Erro ao atualizar a popularidade." });
+                    }
+
+                    res.status(201).json({ message: "Crime cadastrado com sucesso." });
+                });
+            });
+        });
     });
 });
 
