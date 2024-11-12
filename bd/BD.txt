@@ -1,7 +1,10 @@
+DROP SCHEMA herois;
+
 CREATE SCHEMA herois;
 
 CREATE TABLE herois.heroi (
-	id_heroi INT NOT NULL PRIMARY KEY,
+	imagem_heroi VARCHAR(255),
+	id_heroi INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nome_real VARCHAR(50) NOT NULL,
     nome_heroi VARCHAR(50) NOT NULL,
     sexo CHAR(1) NOT NULL CHECK(sexo IN ('f', 'm')),
@@ -17,7 +20,7 @@ CREATE TABLE herois.heroi (
 );
 
 CREATE TABLE herois.crimes (
-	id_crime INT NOT NULL PRIMARY KEY,
+	id_crime INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nome_crime VARCHAR(50) NOT NULL,
     descricao_crime VARCHAR(100),
     data_crime DATE NOT NULL,
@@ -29,12 +32,12 @@ CREATE TABLE herois.heroi_crime (
     fk_id_crime_hc INT NOT NULL,
     
     PRIMARY KEY (fk_id_heroi_hc, fk_id_crime_hc),
-    FOREIGN KEY (fk_id_heroi_hc) REFERENCES herois.heroi(id_heroi),
-    FOREIGN KEY (fk_id_crime_hc) REFERENCES herois.crimes(id_crime)
+    FOREIGN KEY (fk_id_heroi_hc) REFERENCES herois.heroi(id_heroi) ON DELETE CASCADE,
+    FOREIGN KEY (fk_id_crime_hc) REFERENCES herois.crimes(id_crime) ON DELETE CASCADE
 );
 
 CREATE TABLE herois.missoes (
-	id_missao INT NOT NULL PRIMARY KEY,
+	id_missao INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nome_missao VARCHAR(50) NOT NULL,
     descricao_missao VARCHAR(100),
     resultado VARCHAR(10) NOT NULL CHECK(resultado IN ('sucesso', 'fracasso')),
@@ -46,22 +49,18 @@ CREATE TABLE herois.heroi_missao (
     fk_id_missao_hm INT NOT NULL,
     
     PRIMARY KEY (fk_id_heroi_hm, fk_id_missao_hm),
-    FOREIGN KEY (fk_id_heroi_hm) REFERENCES herois.heroi(id_heroi),
-    FOREIGN KEY (fk_id_missao_hm) REFERENCES herois.missoes(id_missao)
+    FOREIGN KEY (fk_id_heroi_hm) REFERENCES herois.heroi(id_heroi) ON DELETE CASCADE,
+    FOREIGN KEY (fk_id_missao_hm) REFERENCES herois.missoes(id_missao) ON DELETE CASCADE
 );
 
 CREATE TABLE herois.poderes (
-	id_poder INT NOT NULL PRIMARY KEY,
+	id_poder INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nome_poder VARCHAR(50) NOT NULL,
     descricao_poder VARCHAR(100),
     fk_id_heroi_poder INT,
     
-    FOREIGN KEY (fk_id_heroi_poder) REFERENCES herois.heroi(id_heroi)
+    FOREIGN KEY (fk_id_heroi_poder) REFERENCES herois.heroi(id_heroi) ON DELETE CASCADE
 );
-
------------------------------------------------------
-SELECT * FROM herois.heroi;
-
 
 INSERT INTO herois.heroi (id_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc, nivel_forca, popularidade, status_heroi, vitorias, derrotas)
 VALUES
@@ -75,10 +74,16 @@ VALUES
 	(8, 'William Butcher', 'Billy Butcher', 'm', 1.80, 85.00, '1972-03-18', 'Londres, Inglaterra', 80, 90, 'ativo', 20, 4),
 	(9, 'Klara Risinger', 'Stormfront', 'f', 1.75, 70.00, '1919-07-15', 'Berlim, Alemanha', 90, 50, 'inativo', 8, 2);
 
+UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/8/84/Deep-S4.png' WHERE id_heroi = 1;
+UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/4/4c/A-Train-S4.png' WHERE id_heroi = 2;
+UPDATE herois.heroi SET imagem_heroi = 'https://actionfigurebrasil.com.br/cdn/shop/files/queen-maeve__gallery_63d9a0670d773.jpg?v=1717601699' WHERE id_heroi = 3;
+UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/5/5b/Homelander-S4.png' WHERE id_heroi = 4;
+UPDATE herois.heroi SET imagem_heroi = 'https://p2.trrsf.com/image/fget/cf/1200/1600/middle/images.terra.com/2022/09/07/266948152-the-boys-starlight.jpg' WHERE id_heroi = 5;
+UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/6/6b/Kimiko-S4.png' WHERE id_heroi = 6;
+UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/8/8b/Black-Noire-S3.png' WHERE id_heroi = 7;
+UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/9/98/Billy_Butcher-S4.png' WHERE id_heroi = 8;
+UPDATE herois.heroi SET imagem_heroi = 'https://uploads.jovemnerd.com.br/wp-content/uploads/2020/03/stormfront1-the-boys.jpg' WHERE id_heroi = 9;
 
-SELECT id_heroi FROM herois.heroi;
-
-SELECT * FROM herois.poderes;
 
 -- Inserindo poderes
 INSERT INTO herois.poderes (id_poder, nome_poder, descricao_poder, fk_id_heroi_poder)
@@ -98,28 +103,6 @@ VALUES
 (13, 'Manipulação psicológica', 'Butcher tem a habilidade de manipular e enganar seus inimigos.', 8),
 (14, 'Controle de eletricidade', 'Stormfront pode manipular eletricidade.', 9),
 (15, 'Imortalidade', 'Stormfront é praticamente imortal.', 9);
-
------------------------------------------------------------------------------------------
-SELECT * FROM herois.crimes;
-
-SELECT 
-    H.ID_HEROI,
-    H.NOME_REAL,
-    H.NOME_HEROI,
-    H.NIVEL_FORCA,
-    H.POPULARIDADE,
-    H.STATUS_HEROI,
-    C.ID_CRIME,
-    C.NOME_CRIME,
-    C.DESCRICAO_CRIME,
-    C.SEVERIDADE_CRIME
-FROM 
-    HEROIS.HEROI H
-JOIN 
-    HEROIS.HEROI_CRIME HC ON H.ID_HEROI = HC.FK_ID_HEROI_HC
-JOIN 
-    HEROIS.CRIMES C ON HC.FK_ID_CRIME_HC = C.ID_CRIME;
-
 
 INSERT INTO herois.crimes (id_crime, nome_crime, descricao_crime, data_crime, severidade_crime)
 VALUES 
@@ -162,27 +145,6 @@ VALUES
 (9, 17), -- Stormfront: Crimes de guerra
 (9, 18); -- Stormfront: Incitação ao ódio
 
----------------------------------------------------------------------------------------------------------------
-SELECT 
-    H.ID_HEROI,
-    H.NOME_REAL,
-    H.NOME_HEROI,
-    H.NIVEL_FORCA,
-    H.POPULARIDADE,
-    H.STATUS_HEROI,
-    M.ID_MISSAO,
-    M.NOME_MISSAO,
-    M.DESCRICAO_MISSAO,
-    M.RESULTADO,
-    M.RECOMPENSA
-FROM 
-    HEROIS.HEROI H
-JOIN 
-    HEROIS.HEROI_MISSAO HM ON H.ID_HEROI = HM.FK_ID_HEROI_HM
-JOIN 
-    HEROIS.MISSOES M ON HM.FK_ID_MISSAO_HM = M.ID_MISSAO;
-
-
 INSERT INTO HEROIS.MISSOES (ID_MISSAO, NOME_MISSAO, DESCRICAO_MISSAO, RESULTADO, RECOMPENSA)
 VALUES 
 (1, 'Resgate no Edifício Empire', 'Resgate de reféns no Empire State Building.', 'sucesso', 50),
@@ -201,9 +163,19 @@ VALUES
 (8, 3), -- Billy Butcher participou da infiltração no quartel inimigo
 (9, 2); -- Stormfront falhou na neutralização de bomba
 
+DROP TRIGGER IF EXISTS atualiza_heroi;
 
+DELIMITER //
 
+CREATE TRIGGER atualiza_heroi
+BEFORE UPDATE ON herois.heroi
+FOR EACH ROW
+BEGIN
+	IF NEW.popularidade < 20 AND (NEW.vitorias - NEW.derrotas) < 10 THEN
+		SET NEW.status_heroi = 'banido';
+    ELSEIF NEW.popularidade >= 20 AND (NEW.vitorias - NEW.derrotas) > 5 THEN
+		SET NEW.status_heroi = 'ativo';
+	END IF;
+END//
 
-
-
-
+DELIMITER ;
