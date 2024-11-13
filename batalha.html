@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalha</title>
+    <link rel="stylesheet" href="style/batalha.css">
+</head>
+<body>
+    <div id="header">
+        <a href="index.html">
+            <button id="btn-home"><i class="fas fa-home"></i>Home</button>
+        </a>
+        <h1 id="titulo">Simulador de Batalha</h1>
+    </div>
+
+    <div id="div-batalha">
+        <div class="seletor" id="heroi1">
+            <label for="select-heroi1">Escolha o herói 1:</label>
+            <select id="select-heroi1"></select>
+            
+            <div id="heroi1-imagem"></div>
+            <div id="heroi1-nome" class="heroi-nome"></div>
+            <div id="heroi1-dados"></div>
+        </div>
+
+        <div id="vs">X</div>
+
+        <div class="seletor" id="heroi2">
+            <label for="select-heroi2">Escolha o herói 2:</label>
+            <select id="select-heroi2"></select>
+            
+            <div id="heroi2-imagem"></div>
+            <div id="heroi2-nome" class="heroi-nome"></div>
+            <div id="heroi2-dados"></div>
+        </div>
+    </div>
+
+    <button id="btn-batalhar">Simular Batalha</button>
+
+    <dialog id="dialog-content">
+            <h3>Batalha em andamento...</h3>
+            <div id="etapas-batalha"></div>
+            <button id="fechar-dialog">X</button>
+    </dialog>
+
+     <script src="js/batalha.js"></script>
+</body>
+</html>

@@ -13,7 +13,7 @@
     margin-bottom: 3rem;
 }
 
-#btn-herois, #btn-crimes {
+#btn-herois, #btn-crimes, #btn-missoes, #btn-batalha {
     width: 31.25rem;
     padding: 2% 9.4%;
     border-radius: 0.5rem;
@@ -26,7 +26,7 @@
     margin: auto;
 }
 
-#btn-herois:hover, #btn-crimes:hover {
+#btn-herois:hover, #btn-crimes:hover, #btn-missoes:hover, #btn-batalha:hover {
     background-color: black;
     color: #E5E5E5;
 }

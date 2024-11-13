@@ -140,20 +140,20 @@ app.put('/api/herois/:id', (req, res) => {
     const idHeroi = req.params.id;
 
     const {
-        imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
+        imagem_heroi, nome_real, nome_heroi, altura, peso,
         nivel_forca, popularidade, status_heroi, vitorias, derrotas
     } = req.body;
 
     const query = `
         UPDATE heroi
-        SET imagem_heroi = ?, nome_real = ?, nome_heroi = ?, sexo = ?, altura = ?,
-            peso = ?, data_nasc = ?, local_nasc = ?, nivel_forca = ?, popularidade = ?,
+        SET imagem_heroi = ?, nome_real = ?, nome_heroi = ?, altura = ?,
+            peso = ?, nivel_forca = ?, popularidade = ?,
             status_heroi = ?, vitorias = ?, derrotas = ?
         WHERE id_heroi = ?
     `;
 
     const values = [
-        imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
+        imagem_heroi, nome_real, nome_heroi, altura, peso,
         nivel_forca, popularidade, status_heroi, vitorias, derrotas, idHeroi
     ];
 
