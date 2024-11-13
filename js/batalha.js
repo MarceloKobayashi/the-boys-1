@@ -53,10 +53,21 @@ function mostraHeroi(selectId, imagemId, nomeId, dadosId) {
         imagemDiv.innerHTML = `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBxmWXqFg0zoygAHTrQYGI0KXgcdGm5g-Axg&s" class="imagem-heroi-padrao">`;
 
         const nomeDiv = document.getElementById(nomeId);
-        nomeDiv.innerHTML = "<h3>Selecione seu herói</h3>";
+        nomeDiv.innerHTML = "<h3>Não selecionado</h3>";
         
         const dadosDiv = document.getElementById(dadosId);
-        dadosDiv.innerHTML = "";
+        dadosDiv.innerHTML = `
+            <div id="heroi1-dados">
+            <div class="dados-linha">
+                <p><strong>Força:</strong> ???</p>
+                <p><strong>Popularidade:</strong> ???</p>
+            </div>
+            <div class="dados-linha">
+                <p><strong>Vitórias:</strong> ???</p>
+                <p><strong>Derrotas:</strong> ???</p>
+            </div>
+        </div>
+        `;
         return;
     }
 
@@ -74,10 +85,16 @@ function mostraHeroi(selectId, imagemId, nomeId, dadosId) {
     imagemDiv.innerHTML = `<img src="${imagemUrl}" alt="${nomeHeroi}" class="imagem-heroi-padrao">`;
     nomeDiv.innerHTML = `<h3>${nomeHeroi}</h3>`;
     dadosDiv.innerHTML = `
-        <p><strong>Força:</strong> ${forca}</p>
-        <p><strong>Popularidade:</strong> ${popularidade}</p>
-        <p><strong>Vitórias:</strong> ${vitorias}</p>
-        <p><strong>Derrotas:</strong> ${derrotas}</p>
+        <div id="heroi1-dados">
+            <div class="dados-linha">
+                <p><strong>Força:</strong> ${forca}/100</p>
+                <p><strong>Popularidade:</strong> ${popularidade}/100</p>
+            </div>
+            <div class="dados-linha">
+                <p><strong>Vitórias:</strong> ${vitorias}</p>
+                <p><strong>Derrotas:</strong> ${derrotas}</p>
+            </div>
+        </div>
     `;
 }
 
@@ -133,17 +150,17 @@ async function simularMostrarBatalha(heroi1, heroi2) {
             heroi1.vida -= dano;
         }
 
-        logs.push(`${atacante.nome_heroi} causou ${dano} de dano em ${defensor.nome_heroi}: ${defensor.nome_heroi} agora tem ${defensor.vida}/10 de vida`);
+        logs.push(`${atacante.nome_heroi} causou ${dano} de dano em ${defensor.nome_heroi}: ${defensor.nome_heroi} agora tem ${defensor.vida}/10 de vida.`);
 
         if (turno % 2 === 0) {
             const chance = (Math.abs(heroi1.popularidade - heroi2.popularidade));
             if (Math.random() < chance / 100) {
                 if (heroi1.popularidade > heroi2.popularidade) {
                     heroi2.vida -= 1;
-                    logs.push(`${heroi1.nome_heroi} recebe aplausos e causa 1 de dano em ${heroi2.nome_heroi}: ${heroi2.nome_heroi} agora tem ${heroi2.vida}/10 de vida`);
+                    logs.push(`${heroi1.nome_heroi} recebe aplausos e causa 1 de dano em ${heroi2.nome_heroi}: ${heroi2.nome_heroi} agora tem ${heroi2.vida}/10 de vida.`);
                 } else {
                     heroi1.vida -= 1;
-                    logs.push(`${heroi2.nome_heroi} recebe aplausos e causa 1 de dano em ${heroi1.nome_heroi}: ${heroi1.nome_heroi} agora tem ${heroi1.vida}/10 de vida`);
+                    logs.push(`${heroi2.nome_heroi} recebe aplausos e causa 1 de dano em ${heroi1.nome_heroi}: ${heroi1.nome_heroi} agora tem ${heroi1.vida}/10 de vida.`);
                 }
             }
         }
@@ -158,7 +175,7 @@ async function simularMostrarBatalha(heroi1, heroi2) {
     const vencedor = heroi1.vida > 0 ? heroi1 : heroi2;
     const perdedor = heroi1.vida <= 0 ? heroi1 : heroi2;
 
-    logs.push(`Batalha concluída. Vencedor: ${vencedor.nome_heroi}`);
+    logs.push(`Batalha concluída. Vencedor: ${vencedor.nome_heroi}.`);
 
     heroi1.nivel_forca = Math.max(0, heroi1.nivel_forca - 20);
     heroi2.nivel_forca = Math.max(0, heroi2.nivel_forca - 20);
