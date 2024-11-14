@@ -15,6 +15,7 @@ async function carregarHerois() {
 
 function preencherSelect(selectId, herois, imagemId, nomeId, dadosId) {
     const select = document.getElementById(selectId);
+    select.innerHTML = "";
 
     const opcaoPadrao = document.createElement("option");
     opcaoPadrao.value = "";
@@ -50,7 +51,7 @@ function mostraHeroi(selectId, imagemId, nomeId, dadosId) {
 
     if (!opcaoEscolhida.value) {
         const imagemDiv = document.getElementById(imagemId);
-        imagemDiv.innerHTML = `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBxmWXqFg0zoygAHTrQYGI0KXgcdGm5g-Axg&s" class="imagem-heroi-padrao">`;
+        imagemDiv.innerHTML = `<img src="https://st3.depositphotos.com/3581215/18899/v/450/depositphotos_188994514-stock-illustration-vector-illustration-male-silhouette-profile.jpg" class="imagem-heroi-padrao">`;
 
         const nomeDiv = document.getElementById(nomeId);
         nomeDiv.innerHTML = "<h3>Não selecionado</h3>";
@@ -83,7 +84,7 @@ function mostraHeroi(selectId, imagemId, nomeId, dadosId) {
     const dadosDiv = document.getElementById(dadosId)
 
     imagemDiv.innerHTML = `<img src="${imagemUrl}" alt="${nomeHeroi}" class="imagem-heroi-padrao">`;
-    nomeDiv.innerHTML = `<h3>${nomeHeroi}</h3>`;
+    nomeDiv.innerHTML = `<h3 id="nome-heroi">${nomeHeroi}</h3>`;
     dadosDiv.innerHTML = `
         <div id="heroi1-dados">
             <div class="dados-linha">
@@ -108,6 +109,11 @@ document.getElementById("btn-batalhar").addEventListener("click", async () => {
         return;
     }
 
+    if (heroi1Id === heroi2Id) {
+        alert("Selecione dois heróis diferentes para a luta.");
+        return;
+    }
+
     const [heroi1, heroi2] = await Promise.all([
         fetch(`http://localhost:3000/api/herois/${heroi1Id}`).then(res => res.json()),
         fetch(`http://localhost:3000/api/herois/${heroi2Id}`).then(res => res.json())
@@ -124,7 +130,7 @@ document.getElementById("btn-batalhar").addEventListener("click", async () => {
     dialog.showModal();
     etapasBatalha.innerHTML = resultado.logs.join('<br>');
 
-    document.getElementById("fechar-dialog").addEventListener("click", () => {
+    document.getElementById("fechar-dialog").addEventListener("click", async() => {
         dialog.close();
     });
 
@@ -166,7 +172,7 @@ async function simularMostrarBatalha(heroi1, heroi2) {
                     logs.push('<div class="log">-----------------------------------------------------------------------------------------------------</div>');
                 } else {
                     heroi1.vida -= 1;
-                    logs.push(`<div class="log">${heroi2.popularidade > heroi1.popularidade ? `<span class="nome-heroi-verde">${heroi2.nome_heroi}</span>` : `<span class="nome-heroi-vermelho">${heroi1.nome_heroi}</span>`} recebe aplausos e causa 1 de dano em ${heroi1.nome_heroi}: ${heroi1.nome_heroi} agora tem ${heroi1.vida}/10 de vida.</div>`);
+                    logs.push(`<div class="log">${heroi2.popularidade > heroi1.popularidade ? `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>` : `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>`} recebe aplausos e causa 1 de dano em ${heroi1.nome_heroi}: ${heroi1.nome_heroi} agora tem ${heroi1.vida}/10 de vida.</div>`);
                     logs.push('<div class="log">-----------------------------------------------------------------------------------------------------</div>');
                 }
             }

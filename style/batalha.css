@@ -48,15 +48,20 @@
     left: 50%;
     transform: translateX(-50%);
 
+    padding: 3rem;
+
     margin-top: 1rem;
     gap: 15rem;
 
+    border: solid;
+    background: linear-gradient(90deg, #FF5733, #8A2BE2);
 }
 
 .imagem-heroi-padrao {
     width: 18rem;
     height: 20rem;
     vertical-align: middle;
+    border: solid 0.2rem;
 }
 
 .seletor {
@@ -202,5 +207,16 @@
 .nome-heroi-verde {
     color: green;
     font-weight: bold;
+}
+
+#nome-heroi {
+    border-radius: 0.5rem;
+    border: 0.3rem solid;
+    padding: 1rem;
+}
+
+.destaque {
+    font-weight: bold;
+    color: #FF5733; /* Escolha uma cor que chame a atenção */
 }
 
