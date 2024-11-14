@@ -49,7 +49,7 @@
     transform: translateX(-50%);
 
     margin-top: 1rem;
-    gap: 20rem;
+    gap: 15rem;
 
 }
 
@@ -150,25 +150,57 @@
 }
 
 #dialog-content {
-    width: 70rem;
+    width: 80rem;
     padding: 1.25rem;
     border-radius: 8px;
 }
 
 #etapas-batalha {
     font-size: 1.4rem;
-    white-space: nowrap;
-
     font-family: "Nanum Gothic Coding", monospace;
     cursor: pointer;
 
     margin-bottom: 1rem;
 }
 
-#etapas-batalha .logs {
-    margin-bottom: 3rem;
+.centralizado {
+    text-align: center;
 }
 
-#etapas-batalha p {
-    margin-bottom: 0.8rem;
+#dialog-titulo {
+    font-size: 2rem;
+    font-family: "Nanum Gothic Coding", monospace;
+    cursor: pointer;
 }
+
+.log {
+    margin-bottom: -25px;
+    margin-top: -10px;
+}
+
+#fechar-dialog {
+    cursor: pointer;
+    border-radius: 0.3125rem;
+    padding: 0.8rem 1.3rem;
+    
+    font-size: 2rem;
+    font-family: "Nanum Gothic Coding", monospace;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+#fechar-dialog:hover {
+    background-color: red;
+}
+
+.nome-heroi-vermelho {
+    color: red;
+    font-weight: bold;
+}
+
+.nome-heroi-verde {
+    color: green;
+    font-weight: bold;
+}
+
