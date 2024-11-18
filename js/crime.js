@@ -28,7 +28,6 @@ async function listarCrimes(nome_heroi = '', severidade = '', data = '') {
             linha.innerHTML = `
             <td id="btns-lista">
                 <button class="btn-excluir" data-id="${crime.id_crime}">Excluir</button>
-                <button class="btn-editar" data-id="${crime.id_crime}">Editar</button>
             </td>
             <td>${crime.nome_crime}</td>
             <td>${crime.descricao_crime}</td>
@@ -65,6 +64,26 @@ document.getElementById("input-nome").addEventListener("keydown", (event) => {
         document.getElementById("btn-busca-nome-status").click();
     }
 });
+
+async function carregarHeroisSelect() {
+    try {
+        const response = await fetch("http://localhost:3000/api/herois");
+        const herois = await response.json();
+
+        const selectHeroi = document.getElementById("nome-heroi");
+        selectHeroi.innerHTML = '<option value="">Selecione um herói</option>';
+        
+        herois.forEach(heroi => {
+            const option = document.createElement("option");
+
+            option.value = heroi.id_heroi;
+            option.textContent = heroi.nome_heroi;
+            selectHeroi.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar heróis: ", error);
+    }
+}
 
 document.getElementById("tabela-crimes").addEventListener("click", async (event) => {
     if (event.target && event.target.classList.contains("btn-excluir")) {
@@ -114,7 +133,8 @@ function formatarData(data) {
     return `${dia}/${mes}/${ano}`;
 }
 
-document.getElementById("btn-cadastrar-crime").addEventListener("click", () => {
+document.getElementById("btn-cadastrar-crime").addEventListener("click", async () => {
+    await carregarHeroisSelect();
     document.getElementById("dialog-cadastrar").showModal();
 });
 
@@ -131,8 +151,10 @@ document.getElementById("form-cadastrar").addEventListener("submit", async (even
         descricao_crime: formData.get("desc-crime"),
         data_crime: formData.get("data-crime"),
         severidade_crime: formData.get("severidade"),
-        nome_heroi: formData.get("nome-heroi")
+        id_heroi: formData.get("nome-heroi")
     };
+
+    console.log(crimeData);
 
     try {
         const response = await fetch("http://localhost:3000/api/crimes", {

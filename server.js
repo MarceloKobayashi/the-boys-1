@@ -319,7 +319,8 @@ app.delete('/api/crimes/:id', (req, res) => {
 });
 
 app.post('/api/crimes', (req, res) => {
-    const { nome_crime, descricao_crime, data_crime, severidade_crime, nome_heroi } = req.body;
+
+    const { nome_crime, descricao_crime, data_crime, severidade_crime, id_heroi } = req.body;
 
     const query = `
         INSERT INTO crimes (nome_crime, descricao_crime, data_crime, severidade_crime)
@@ -335,20 +336,20 @@ app.post('/api/crimes', (req, res) => {
         const crimeId = resultado.insertId; //Pega o ID do último registro inserido
         const heroiQuery = `
             INSERT INTO heroi_crime (fk_id_heroi_hc, fk_id_crime_hc)
-            VALUES ((SELECT id_heroi FROM heroi WHERE nome_heroi = ?), ?)
+            VALUES (?, ?)
         `;
 
-        db.query(heroiQuery, [nome_heroi, crimeId], (err) => {
+        db.query(heroiQuery, [id_heroi, crimeId], (err) => {
             if (err) {
                 console.error("Erro ao associar crime ao herói: ", err);
                 return res.status(500).json({ message: "Erro ao associar crime ao herói." });
             }
 
             const popularidadeQuery = `
-                SELECT popularidade FROM heroi WHERE nome_heroi = ?
+                SELECT popularidade FROM heroi WHERE id_heroi = ?
             `;
 
-            db.query(popularidadeQuery, [nome_heroi], (erro, result) => {
+            db.query(popularidadeQuery, [id_heroi], (erro, result) => {
                 if (erro) {
                     console.error("Erro ao buscar popularidade de herói: ", erro);
                     return res.status(500).json({ message: "Erro ao buscar popularidade de herói." });
@@ -358,10 +359,10 @@ app.post('/api/crimes', (req, res) => {
                 const novaPopularidade = Math.max(0, popularidadeAtual - (severidade_crime * 3));
 
                 const updatePopularidadeQuery = `
-                    UPDATE heroi SET popularidade = ? WHERE nome_heroi = ?
+                    UPDATE heroi SET popularidade = ? WHERE id_heroi = ?
                 `;
 
-                db.query(updatePopularidadeQuery, [novaPopularidade, nome_heroi], (x) => {
+                db.query(updatePopularidadeQuery, [novaPopularidade, id_heroi], (x) => {
                     if (x) {
                         console.error("Erro ao atualizar popularidade do herói: ", x);
                         return res.status(500).json({ message: "Erro ao atualizar a popularidade." });
