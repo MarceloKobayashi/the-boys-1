@@ -35,6 +35,10 @@ btnDialogCadastrar.addEventListener("click", async () => {
         const status = document.getElementById("status").value;
         const vitorias = 0;
         const derrotas = 0;
+        const poderes = [];
+
+        const poderInput = document.querySelectorAll("#poderes-lista span");
+        poderInput.forEach(input => poderes.push(input.textContent.slice(0, -1)));
 
         try {
             const response = await fetch("http://localhost:3000/api/herois", {
@@ -55,7 +59,8 @@ btnDialogCadastrar.addEventListener("click", async () => {
                     popularidade: popularidade,
                     status_heroi: status,
                     vitorias: vitorias,
-                    derrotas: derrotas
+                    derrotas: derrotas,
+                    poderes: poderes
                 }),
             });
 
@@ -73,6 +78,7 @@ btnDialogCadastrar.addEventListener("click", async () => {
                 nivelForca = "";
                 popularidade = "";
                 status = "";
+                poderes.length = 0;
                 
                 listarHerois();
             } else {
@@ -81,5 +87,34 @@ btnDialogCadastrar.addEventListener("click", async () => {
         } catch (error) {
             console.error("Erro ao cadastrar herói: ",error);
         }
+    }
+});
+
+document.getElementById("btn-adicionar-poder").addEventListener("click", () => {
+    const poderInput = document.getElementById("poderes");
+    const poderValor = poderInput.value.trim();
+
+    if (poderValor) {
+        const poderesLista = document.getElementById("poderes-lista");
+        const novoPoder = document.createElement("span");
+
+        novoPoder.textContent = poderValor;
+
+        const removerPoder = document.createElement("button");
+        removerPoder.textContent = "X";
+        removerPoder.addEventListener("click", () => {
+            poderesLista.removeChild(novoPoder);
+        });
+
+        novoPoder.appendChild(removerPoder);
+        poderesLista.appendChild(novoPoder);
+        poderInput.value = "";
+    }
+});
+
+document.getElementById("poderes").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("btn-adicionar-poder").click();
     }
 });

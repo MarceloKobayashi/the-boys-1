@@ -27,7 +27,7 @@ app.use(express.json());
 app.post('/api/herois', (req, res) => {
     const { 
         imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
-        nivel_forca, popularidade, status_heroi, vitorias, derrotas 
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas, poderes 
     } = req.body;
 
     const query = `
@@ -46,6 +46,23 @@ app.post('/api/herois', (req, res) => {
         if (error) {
             console.error("Erro ao cadastrar herói:", error);
             return res.status(500).json({ message: "Erro ao cadastrar herói." });
+        }
+
+        const id_heroi = resultado.insertId;
+
+        if (poderes && poderes.length > 0) {
+            const poderQuery = `
+                INSERT INTO poderes (nome_poder, fk_id_heroi_poder)
+                VALUES (?, ?)
+            `;
+
+            poderes.forEach(poder => {
+                db.query(poderQuery, [poder, id_heroi], (err, result) => {
+                    if (err) {
+                        console.error("Erro ao inserir poder: ", err);
+                    }
+                });
+            });
         }
 
         res.status(201).json({ message: "Herói cadastrado com sucesso." });
@@ -141,7 +158,7 @@ app.put('/api/herois/:id', (req, res) => {
 
     const {
         imagem_heroi, nome_real, nome_heroi, altura, peso,
-        nivel_forca, popularidade, status_heroi, vitorias, derrotas
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas, poderes
     } = req.body;
 
     const query = `
@@ -167,10 +184,35 @@ app.put('/api/herois/:id', (req, res) => {
             return res.status(404).json({ message: "Herói não encontrado." });
         }
 
-        res.status(200).json({ message: "Herói atualizado com sucesso." });
+        const deletePoderQuery = `
+            DELETE FROM poderes WHERE fk_id_heroi_poder = ?
+        `;
 
+        db.query(deletePoderQuery, [idHeroi], (error) => {
+            if (error) {
+                console.error("Erro ao deletar poderes antigos: ", error);
+                return res.status(500).json({ message: "Erro ao deletar poderes antigos." });
+            }
+
+            if (poderes && Array.isArray(poderes)) {
+                const insertPoderesQuery = `
+                    INSERT INTO poderes (nome_poder, fk_id_heroi_poder)
+                    VALUES (?, ?)
+                `;
+            
+                poderes.forEach(poder => {
+                    db.query(insertPoderesQuery, [poder, idHeroi], (error) => {
+                        if (error) {
+                            console.error("Erro ao adicionar poder: ", error);
+                            return res.status(500).json({ message: "Erro ao adicionar poder." });
+                        }
+                    });
+                });
+            }
+
+            res.status(200).json({ message: "Herói atualizado com sucesso." });
+        });
     });
-
 });
 
 app.delete('/api/herois/:id', (req, res) => {

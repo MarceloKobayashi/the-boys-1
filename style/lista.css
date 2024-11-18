@@ -206,3 +206,63 @@
     background-color: red;
     color: black;
 }
+
+.linha-poderes {
+    display: flex;
+    align-items: end;
+    gap: 1rem;
+}
+
+.linha-poderes div:first-child {
+    flex: 0 0 70%;
+}
+
+.linha-poderes div:last-child {
+    flex: 0 0 30%;
+}
+
+#poderes {
+    width: 100%;
+}
+
+#btn-adicionar-poder {
+    width: 80%;
+
+    cursor: pointer;
+    border-radius: 0.3125rem;
+    
+    font-size: 1rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#btn-adicionar-poder:hover {
+    background-color: black;
+    color: #CCC;
+}
+
+#poderes-lista {
+    gap: 1rem;
+}
+
+#poderes-lista span {
+    display: flex;
+
+    margin-right: 1rem;
+    font-size: 1.3rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#poderes-lista span button {
+    cursor: pointer;
+    border-radius: 0.3125rem;
+
+    margin-left: 0.4rem;
+    
+    font-size: 1rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#poderes-lista span button:hover {
+    background-color: red;
+}
+

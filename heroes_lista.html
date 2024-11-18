@@ -142,10 +142,17 @@
                 </div>
             </div>
 
-            <div>
-                <label>Poderes</label>
-                <input type="text" id="editar-poderes" name="poderes">
+            <div class="linha-poderes">
+                <div>
+                    <label for="poderes">Poderes:</label>
+                    <input type="text" name="poderes" id="poderes" placeholder="Digite os poderes do herói">
+                </div>
+                <div>
+                    <button type="button" id="btn-adicionar-poder">Adicionar Poder</button>
+                </div>
             </div>
+
+            <div id="poderes-lista"></div>
     
             <button type="button" id="salvar-edicao">Salvar</button>
             <button type="button" id="btn-sair-edicao">Cancelar</button>

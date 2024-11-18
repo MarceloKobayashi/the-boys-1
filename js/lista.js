@@ -126,12 +126,52 @@ document.getElementById("tabela-herois").addEventListener("click", async (event)
             document.getElementById("editar-vitorias").value = heroi.vitorias;
             document.getElementById("editar-derrotas").value = heroi.derrotas;
 
+            const poderesLista = document.getElementById("poderes-lista");
+            poderesLista.innerHTML = "";
+
+            if (heroi.poderes && Array.isArray(heroi.poderes)) {
+                heroi.poderes.forEach((poder) => {
+                    const novoPoder = document.createElement("span");
+                    novoPoder.textContent = "-" + poder.nome_poder;
+
+                    const removerPoder = document.createElement("button");
+                    removerPoder.textContent = "X";
+                    removerPoder.addEventListener("click", () => {
+                        poderesLista.removeChild(novoPoder);
+                    });
+
+                    novoPoder.appendChild(removerPoder);
+                    poderesLista.appendChild(novoPoder);
+                });
+            }
 
             document.getElementById("editar-heroi-dialog").showModal();
 
         } catch (error) {
             console.error("Erro ao buscar dados do herói para edição: ", error);
         }
+    }
+});
+
+document.getElementById("btn-adicionar-poder").addEventListener("click", () => {
+    const poderInput = document.getElementById("poderes");
+    const poderValor = poderInput.value.trim();
+
+    if (poderValor) {
+        const poderesLista = document.getElementById("poderes-lista");
+        const novoPoder = document.createElement("span");
+
+        novoPoder.textContent = "-" + poderValor;
+
+        const removerPoder = document.createElement("button");
+        removerPoder.textContent = "X";
+        removerPoder.addEventListener("click", () => {
+            poderesLista.removeChild(novoPoder);
+        });
+
+        novoPoder.appendChild(removerPoder);
+        poderesLista.appendChild(novoPoder);
+        poderInput.value = "";
     }
 });
 
@@ -153,6 +193,15 @@ document.getElementById("salvar-edicao").addEventListener("click", async () => {
         vitorias: parseInt(document.getElementById("editar-vitorias").value),
         derrotas: parseInt(document.getElementById("editar-derrotas").value)
     };
+
+    const poderes = [];
+    const poderElementos = document.querySelectorAll("#poderes-lista span");
+    poderElementos.forEach(poderElemento => {
+        let poder = poderElemento.textContent.slice(1)
+        poderes.push(poder.slice(0, -1));
+    });
+
+    heroiAtualizado.poderes = poderes;
 
     try {
         const response = await fetch(`http://localhost:3000/api/herois/${idHeroi}`, {
