@@ -28,6 +28,11 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
 
             const poderes = heroi.poderes && heroi.poderes.length > 0 ? `<ul>${heroi.poderes.map(poder => `<li>${poder.nome_poder}</strong></li>`).join('')}</ul>`:'Nenhum poder registrado';
            
+            if (heroi.ultimo_batalhar) {
+                linha.style.backgroundColor = '#1A237E';
+                linha.style.color = 'white';
+            }
+
             linha.innerHTML = `
             <td id="btns-lista">
                 <button class="btn-excluir" data-id="${heroi.id_heroi}">Excluir</button>

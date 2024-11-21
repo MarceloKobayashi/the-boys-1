@@ -87,7 +87,9 @@
 #btns-lista {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
 }
 
 .btn-excluir, .btn-editar {
@@ -109,11 +111,21 @@
     color: #ccc;
 }
 
+td {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+th {
+    white-space: nowrap;
+}
+
 #tabela-herois thead th {
     background-color: #333;
     color: #E5E5E5;
     padding: 1rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-align: center;
 }
 
@@ -123,6 +135,7 @@
 }
 
 #tabela-herois tbody td {
+
     padding: 1rem;
     font-size: 1rem;
     border-bottom: 0.0625rem solid #ddd;
