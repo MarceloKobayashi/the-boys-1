@@ -35,6 +35,7 @@ btnDialogCadastrar.addEventListener("click", async () => {
         const status = document.getElementById("status").value;
         const vitorias = 0;
         const derrotas = 0;
+        const ultimo_batalhar = false;
         const poderes = [];
 
         const poderInput = document.querySelectorAll("#poderes-lista span");
@@ -60,6 +61,7 @@ btnDialogCadastrar.addEventListener("click", async () => {
                     status_heroi: status,
                     vitorias: vitorias,
                     derrotas: derrotas,
+                    ultimo_batalhar: ultimo_batalhar,
                     poderes: poderes
                 }),
             });

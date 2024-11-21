@@ -9,6 +9,12 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
         const response = await fetch(url);
         const herois = await response.json();
 
+        herois.sort((a, b) => {
+            if (a.ultimo_batalhar && !b.ultimo_batalhar) return -1;
+            if (!a.ultimo_batalhar && b.ultimo_batalhar) return 1;
+            return 0;
+        });
+
         const tabela = document.getElementById("tabela-herois").getElementsByTagName("tbody")[0];
 
         tabela.innerHTML = "";
@@ -21,7 +27,7 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
             const status = heroi.status_heroi.charAt(0).toUpperCase() + heroi.status_heroi.slice(1).toLowerCase();
 
             const poderes = heroi.poderes && heroi.poderes.length > 0 ? `<ul>${heroi.poderes.map(poder => `<li>${poder.nome_poder}</strong></li>`).join('')}</ul>`:'Nenhum poder registrado';
-                
+           
             linha.innerHTML = `
             <td id="btns-lista">
                 <button class="btn-excluir" data-id="${heroi.id_heroi}">Excluir</button>
@@ -42,6 +48,7 @@ async function listarHerois(nome = '', status = '', popularidade = '') {
             <td>${heroi.derrotas}</td>
             <td>${poderes}</td>
             `;
+
         });
     } catch (error) {
         console.error("Erro ao listar heróis: ", error);

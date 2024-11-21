@@ -27,19 +27,19 @@ app.use(express.json());
 app.post('/api/herois', (req, res) => {
     const { 
         imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
-        nivel_forca, popularidade, status_heroi, vitorias, derrotas, poderes 
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas, ultimo_batalhar, poderes 
     } = req.body;
 
     const query = `
         INSERT INTO heroi (imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
-                            nivel_forca, popularidade, status_heroi, vitorias, derrotas)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)                    
+                            nivel_forca, popularidade, status_heroi, vitorias, derrotas, ultimo_batalhar)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)                    
     `;
 
     const values = [
         imagem_heroi, nome_real, nome_heroi, sexo, altura, peso,
         data_nasc, local_nasc, nivel_forca, popularidade, status_heroi,
-        vitorias || 0, derrotas || 0
+        vitorias || 0, derrotas || 0, ultimo_batalhar || false
     ];
 
     db.query(query, values, (error, resultado) => {
@@ -158,20 +158,20 @@ app.put('/api/herois/:id', (req, res) => {
 
     const {
         imagem_heroi, nome_real, nome_heroi, altura, peso,
-        nivel_forca, popularidade, status_heroi, vitorias, derrotas, poderes
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas, ultimo_batalhar, poderes
     } = req.body;
 
     const query = `
         UPDATE heroi
         SET imagem_heroi = ?, nome_real = ?, nome_heroi = ?, altura = ?,
             peso = ?, nivel_forca = ?, popularidade = ?,
-            status_heroi = ?, vitorias = ?, derrotas = ?
+            status_heroi = ?, vitorias = ?, derrotas = ?, ultimo_batalhar = ?
         WHERE id_heroi = ?
     `;
 
     const values = [
         imagem_heroi, nome_real, nome_heroi, altura, peso,
-        nivel_forca, popularidade, status_heroi, vitorias, derrotas, idHeroi
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas, ultimo_batalhar, idHeroi
     ];
 
     db.query(query, values, (error, resultado) => {
@@ -414,6 +414,41 @@ app.post('/api/crimes', (req, res) => {
                 });
             });
         });
+    });
+});
+
+app.put('/api/batalha/:id', async (req, res) => {
+    const idHeroi = req.params.id;
+
+    const {
+        imagem_heroi, nome_real, nome_heroi, altura, peso,
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas, ultimo_batalhar
+    } = req.body;
+
+    const query = `
+        UPDATE heroi
+        SET imagem_heroi = ?, nome_real = ?, nome_heroi = ?, altura = ?,
+            peso = ?, nivel_forca = ?, popularidade = ?,
+            status_heroi = ?, vitorias = ?, derrotas = ?, ultimo_batalhar = ?
+        WHERE id_heroi = ?
+    `;
+
+    const values = [
+        imagem_heroi, nome_real, nome_heroi, altura, peso,
+        nivel_forca, popularidade, status_heroi, vitorias, derrotas, ultimo_batalhar, idHeroi
+    ];
+
+    db.query(query, values, (error, resultado) => {
+        if (error) {
+            console.error("Erro ao atualizar herói: ", error);
+            return res.status(500).json({ message: "Erro ao atualizar herói." });
+        }
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ message: "Herói não encontrado." });
+        }
+
+        res.status(200).json({ message: "Herói atualizado com sucesso." });
     });
 });
 

@@ -132,6 +132,8 @@ document.getElementById("btn-batalhar").addEventListener("click", async () => {
 
     document.getElementById("fechar-dialog").addEventListener("click", async() => {
         dialog.close();
+
+        window.location.href = "heroes_lista.html";
     });
 
 });
@@ -142,6 +144,18 @@ async function simularMostrarBatalha(heroi1, heroi2) {
     
     let atacante = heroi1.nivel_forca >= heroi2.nivel_forca ? heroi1 : heroi2;
     let defensor = atacante === heroi1 ? heroi2 : heroi1;
+
+    const todosHerois = await fetch("http://localhost:3000/api/herois").then(res => res.json());
+    await Promise.all(todosHerois.map(heroi => {
+        return fetch(`http://localhost:3000/api/batalha/${heroi.id_heroi}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                ...heroi,
+                ultimo_batalhar: false
+            })
+        });
+    }));
 
     while (heroi1.vida > 0 && heroi2.vida > 0) {
         turno++;
@@ -205,8 +219,9 @@ async function simularMostrarBatalha(heroi1, heroi2) {
     logs.push(`<div class="centralizado ${vencedor === heroi1 ? 'nome-heroi-verde' : 'nome-heroi-vermelho'}">${heroi1.nome_heroi}: Força = ${heroi1.nivel_forca}/100, Popularidade = ${heroi1.popularidade}/100</div>`);
     logs.push(`<div class="centralizado ${vencedor === heroi2 ? 'nome-heroi-verde' : 'nome-heroi-vermelho'}">${heroi2.nome_heroi}: Força = ${heroi2.nivel_forca}/100, Popularidade = ${heroi2.popularidade}/100</div>`);
     
+    
     await Promise.all([
-        fetch(`http://localhost:3000/api/herois/${vencedor.id_heroi}`, {
+        fetch(`http://localhost:3000/api/batalha/${vencedor.id_heroi}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -220,10 +235,11 @@ async function simularMostrarBatalha(heroi1, heroi2) {
                 popularidade: vencedor.popularidade,
                 status_heroi: vencedor.status_heroi,
                 vitorias: vencedor.vitorias + 1,
-                derrotas: vencedor.derrotas
+                derrotas: vencedor.derrotas,
+                ultimo_batalhar: true
             })
         }),
-        fetch(`http://localhost:3000/api/herois/${perdedor.id_heroi}`, {
+        fetch(`http://localhost:3000/api/batalha/${perdedor.id_heroi}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -236,7 +252,8 @@ async function simularMostrarBatalha(heroi1, heroi2) {
                 popularidade: perdedor.popularidade,
                 status_heroi: perdedor.status_heroi,
                 vitorias: perdedor.vitorias,
-                derrotas: perdedor.derrotas + 1
+                derrotas: perdedor.derrotas + 1,
+                ultimo_batalhar: true
             })
         })
     ]);
