@@ -95,6 +95,11 @@ a {
     text-decoration: none;
 }
 
+#dialog-cadastrar {
+    
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
 #dialog-cadastrar form {
     display: grid;
     gap: 1rem;

@@ -69,6 +69,8 @@ a {
 #dialog-cadastrar-missao {
     width: 70rem;
     height: 29rem;
+    
+    font-family: "Nanum Gothic Coding", monospace;
 }
 
 #btn-dialog-cadastrar {

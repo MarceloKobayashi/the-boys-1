@@ -1,10 +1,9 @@
-async function listarMissoes(nome = '', nivelDificuldade = '', resultado = '') {
+async function listarMissoes(nome = '', nivelDificuldade = '') {
     try {
         const url = new URL('http://localhost:3000/api/missoes');
         
         if (nome) url.searchParams.append('nome', nome);
         if (nivelDificuldade) url.searchParams.append('nivel_dificuldade', nivelDificuldade);
-        if (resultado) url.searchParams.append('resultado', resultado);
         
         const response = await fetch(url);
         const missoes = await response.json();
@@ -16,7 +15,7 @@ async function listarMissoes(nome = '', nivelDificuldade = '', resultado = '') {
         missoes.forEach(missao => {
             const linha = tabela.insertRow();
 
-            const resultadoFormatado = missao.resultado.charAt(0).toUpperCase() + missao.resultado.slice(1);
+            const resultadoFormatado = missao.resultado.charAt(0).toUpperCase() + missao.resultado.slice(1).toLowerCase();
 
             linha.innerHTML = `
             <td id="btns-lista">
@@ -38,15 +37,13 @@ async function listarMissoes(nome = '', nivelDificuldade = '', resultado = '') {
 document.getElementById('btn-busca-missoes').addEventListener("click", () => {
     const nomeBusca = document.getElementById("input-nome-missao").value;
     const dificuldadeBusca = document.getElementById("input-dificuldade").value;
-    const resultadoBusca = document.getElementById("input-resultado").value;
 
-    listarMissoes(nomeBusca, dificuldadeBusca, resultadoBusca);
+    listarMissoes(nomeBusca, dificuldadeBusca);
 });
 
 document.getElementById('btn-todas-missoes').addEventListener("click", () => {
     document.getElementById("input-nome-missao").value = "";
     document.getElementById("input-dificuldade").value = "";
-    document.getElementById("input-resultado").value = "";
 
     listarMissoes();
 });
@@ -91,7 +88,7 @@ document.getElementById("tabela-missoes").addEventListener("click", async (event
             document.getElementById("editar-descricao-missao").value = missao.descricao_missao;
             document.getElementById("editar-recompensa").value = missao.recompensa;
             document.getElementById("editar-resultado").value = missao.resultado.toLowerCase();
-            document.getElementById("editar-nivel-dificuldade").value = missao.nivel_dificuldade.toLowerCase();
+            document.getElementById("editar-nivel-dificuldade").value = missao.nivel_dificuldade;
 
             document.getElementById("editar-missao-dialog").showModal();
         } catch (error) {

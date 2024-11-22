@@ -82,7 +82,6 @@ btnDialogCadastrar.addEventListener("click", async () => {
                 status = "";
                 poderes.length = 0;
                 
-                listarHerois();
             } else {
                 alert("Erro ao cadastrar heroi");
             }

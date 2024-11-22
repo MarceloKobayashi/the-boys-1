@@ -133,3 +133,86 @@ th {
         font-size: 0.9rem;
     }
 }
+
+#btns-lista {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-excluir, .btn-editar {
+    cursor: pointer;
+    border-radius: 0.3125rem;
+    padding: 0.375rem 0.75rem;
+    
+    font-size: 1rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+.btn-excluir:hover {
+    background-color: red;
+    color: black;
+}
+
+.btn-editar:hover {
+    background-color: black;
+    color: #ccc;
+}
+
+#editar-missao-dialog {
+    width: 50rem;
+    height: 29rem;
+
+    
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#editar-missao-dialog form {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+    width: 100%;
+}
+
+#editar-missao-dialog label {
+    font-size: 1rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#editar-missao-dialog input, #editar-missao-dialog select, #editar-missao-dialog textarea {
+    width: 100%;
+    margin: 0;
+    border-radius: 0.3125rem;
+    border: 0.0625rem solid black;
+
+    font-size: 1rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#salvar-edicao-missao, #btn-sair-edicao-missao {
+    cursor: pointer;
+    border-radius: 0.3125rem;
+    padding: 0.375rem 0.75rem;
+    
+    font-size: 1rem;
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
+#btn-sair-edicao-missao {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+#salvar-edicao-missao:hover {
+    background-color: green;
+    color: black;
+}
+
+#btn-sair-edicao-missao:hover {
+    background-color: red;
+    color: black;
+}
+

@@ -419,25 +419,31 @@ app.post('/api/crimes', (req, res) => {
 
 // Endpoint para cadastrar uma nova missão
 app.post('/api/missoes', (req, res) => {
-    const { title, description, status, assigned_hero } = req.body;
+    const { nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade } = req.body;
+
+    console.log(req.body);
 
     const query = `
-        INSERT INTO herois.missoes (title, description, status, assigned_hero)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO herois.missoes (nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade)
+        VALUES (?, ?, ?, ?, ?)
     `;
 
-    db.query(query, [title, description, status || 'pending', assigned_hero || null], (error, result) => {
+    const values = [
+        nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade
+    ];
+
+    db.query(query, values, (error, result) => {
         if (error) {
             console.error("Erro ao cadastrar missão:", error);
             return res.status(500).json({ message: "Erro ao cadastrar missão." });
         }
 
-        res.status(201).json({ message: "Missão cadastrada com sucesso.", missionId: result.insertId });
+        res.status(201).json({ message: "Missão cadastrada com sucesso." });
     });
 });
 
 app.get('/api/missoes', (req, res) => {
-    const { nome_heroi, nivel_dificuldade, resultado } = req.query;
+    const { nome_heroi, nivel_dificuldade} = req.query;
 
     let query = `
         SELECT m.*
@@ -445,10 +451,6 @@ app.get('/api/missoes', (req, res) => {
     `;
 
     let conditions = [];
-
-    if (resultado) {
-        conditions.push(`m.resultado = '${resultado}'`);
-    }
 
     if (nivel_dificuldade) {
         conditions.push(`m.nivel_dificuldade = '${nivel_dificuldade}'`);
@@ -469,11 +471,10 @@ app.get('/api/missoes', (req, res) => {
     });
 });
 
-// Endpoint para buscar uma missão específica
 app.get('/api/missoes/:id', (req, res) => {
     const missionId = req.params.id;
 
-    const query = `SELECT * FROM missoes WHERE id_mission = ?`;
+    const query = `SELECT * FROM missoes WHERE id_missao = ?`;
 
     db.query(query, [missionId], (error, result) => {
         if (error) {
@@ -486,6 +487,57 @@ app.get('/api/missoes/:id', (req, res) => {
         }
 
         res.json(result[0]);
+    });
+});
+
+app.delete('/api/missoes/:id', (req, res) => {
+    const idMissao = req.params.id;
+
+    const query = 'DELETE FROM missoes WHERE id_missao = ?';
+    
+    db.query(query, [idMissao], (error, resultado) => {
+
+        if (error) {
+            console.error("Erro ao excluir missao:", error);
+            return res.status(500).send({ message: "Erro ao excluir missão." });
+        }
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).send({ message: "Missão não encontrada." });
+        }
+
+        res.status(200).send({ message: 'Missão excluída com sucesso' });
+    });
+});
+
+app.put('/api/missoes/:id', (req, res) => {
+    const idMissao = req.params.id;
+
+    const {
+        nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade
+    } = req.body;
+
+    const query = `
+        UPDATE missoes
+        SET nome_missao = ?, descricao_missao = ?, resultado = ?, recompensa = ?, nivel_dificuldade = ?
+        WHERE id_missao = ?
+    `;
+
+    const values = [
+        nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade, idMissao
+    ];
+
+    db.query(query, values, (error, resultado) => {
+        if (error) {
+            console.error("Erro ao atualizar missão: ", error);
+            return res.status(500).json({ message: "Erro ao atualizar missão." });
+        }
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ message: "Missão não encontrada." });
+        }
+
+         res.status(200).json({ message: "Missão atualizada com sucesso." });
     });
 });
 

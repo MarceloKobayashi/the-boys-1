@@ -161,6 +161,11 @@ th {
     }
 }
 
+#editar-heroi-dialog {
+    
+    font-family: "Nanum Gothic Coding", monospace;
+}
+
 #editar-heroi-dialog form {
     display: grid;
     gap: 1rem;
