@@ -417,6 +417,78 @@ app.post('/api/crimes', (req, res) => {
     });
 });
 
+// Endpoint para cadastrar uma nova missão
+app.post('/api/missoes', (req, res) => {
+    const { title, description, status, assigned_hero } = req.body;
+
+    const query = `
+        INSERT INTO herois.missoes (title, description, status, assigned_hero)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(query, [title, description, status || 'pending', assigned_hero || null], (error, result) => {
+        if (error) {
+            console.error("Erro ao cadastrar missão:", error);
+            return res.status(500).json({ message: "Erro ao cadastrar missão." });
+        }
+
+        res.status(201).json({ message: "Missão cadastrada com sucesso.", missionId: result.insertId });
+    });
+});
+
+app.get('/api/missoes', (req, res) => {
+    const { nome_heroi, nivel_dificuldade, resultado } = req.query;
+
+    let query = `
+        SELECT m.*
+        FROM herois.missoes AS m
+    `;
+
+    let conditions = [];
+
+    if (resultado) {
+        conditions.push(`m.resultado = '${resultado}'`);
+    }
+
+    if (nivel_dificuldade) {
+        conditions.push(`m.nivel_dificuldade = '${nivel_dificuldade}'`);
+    }
+
+    if (conditions.length > 0) {
+        query += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    query += ' ORDER BY m.id_missao';
+
+    db.query(query, (error, resultado) => {
+        if (error) {
+            console.error("Erro ao listar missões: ", error);
+            return res.status(500).json({ message: "Erro ao listar missões." });
+        }
+        res.json(resultado);
+    });
+});
+
+// Endpoint para buscar uma missão específica
+app.get('/api/missoes/:id', (req, res) => {
+    const missionId = req.params.id;
+
+    const query = `SELECT * FROM missoes WHERE id_mission = ?`;
+
+    db.query(query, [missionId], (error, result) => {
+        if (error) {
+            console.error("Erro ao buscar missão:", error);
+            return res.status(500).json({ message: "Erro ao buscar missão." });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "Missão não encontrada." });
+        }
+
+        res.json(result[0]);
+    });
+});
+
 app.put('/api/batalha/:id', async (req, res) => {
     const idHeroi = req.params.id;
 
