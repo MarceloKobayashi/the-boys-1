@@ -16,7 +16,8 @@ CREATE TABLE herois.heroi (
     popularidade INT NOT NULL CHECK(popularidade BETWEEN 0 AND 100),
     status_heroi VARCHAR(10) NOT NULL CHECK(status_heroi IN ('ativo', 'inativo', 'banido')),
     vitorias INT NOT NULL,
-    derrotas INT NOT NULL
+    derrotas INT NOT NULL,
+    ultimo_batalhar BOOLEAN
 );
 
 CREATE TABLE herois.crimes (
@@ -41,7 +42,8 @@ CREATE TABLE herois.missoes (
     nome_missao VARCHAR(50) NOT NULL,
     descricao_missao VARCHAR(100),
     resultado VARCHAR(10) NOT NULL CHECK(resultado IN ('sucesso', 'fracasso')),
-    recompensa INT NOT NULL CHECK(recompensa BETWEEN 0 AND 100)
+    recompensa INT NOT NULL CHECK(recompensa BETWEEN 0 AND 10),
+    nivel_dificuldade INT NOT NULL CHECK(nivel_dificuldade BETWEEN 1 AND 10)
 );
 
 CREATE TABLE herois.heroi_missao (
@@ -62,21 +64,21 @@ CREATE TABLE herois.poderes (
     FOREIGN KEY (fk_id_heroi_poder) REFERENCES herois.heroi(id_heroi) ON DELETE CASCADE
 );
 
-INSERT INTO herois.heroi (id_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc, nivel_forca, popularidade, status_heroi, vitorias, derrotas)
+INSERT INTO herois.heroi (id_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc, nivel_forca, popularidade, status_heroi, vitorias, derrotas, ultimo_batalhar)
 VALUES
-	(1, 'Kevin Moskowitz', 'The Deep', 'm', 1.83, 85.00, '1986-05-02', 'Des Moines, Iowa', 60, 40, 'ativo', 3, 5),
-	(2, 'Reggie Franklin', 'A-Train', 'm', 1.75, 72.00, '1990-03-29', 'San Diego, Califórnia', 85, 70, 'ativo', 7, 3),
-	(3, 'Maggie Shaw', 'Queen Maeve', 'f', 1.80, 75.00, '1989-11-12', 'Seattle, Washington', 90, 85, 'inativo', 15, 2),
-	(4, 'John Gillman', 'Homelander', 'm', 1.85, 95.00, '1981-09-11', 'Desconhecido', 100, 95, 'ativo', 50, 0),
-	(5, 'Annie January', 'Starlight', 'f', 1.67, 60.00, '1992-06-14', 'Evanston, Illinois', 75, 80, 'ativo', 9, 1),
-	(6, 'Kimiko Miyashiro', 'The Female', 'f', 1.60, 55.00, '1991-04-10', 'Tóquio, Japão', 80, 65, 'ativo', 6, 2),
-	(7, 'Earving', 'Black Noir', 'm', 1.88, 90.00, '2004-11-29', 'Desconhecido', 95, 70, 'banido', 12, 1),
-	(8, 'William Butcher', 'Billy Butcher', 'm', 1.80, 85.00, '1972-03-18', 'Londres, Inglaterra', 80, 90, 'ativo', 20, 4),
-	(9, 'Klara Risinger', 'Stormfront', 'f', 1.75, 70.00, '1919-07-15', 'Berlim, Alemanha', 90, 50, 'inativo', 8, 2);
+	(1, 'Kevin Moskowitz', 'The Deep', 'm', 1.83, 85.00, '1986-05-02', 'Des Moines, Iowa', 60, 40, 'ativo', 3, 5, false),
+	(2, 'Reggie Franklin', 'A-Train', 'm', 1.75, 72.00, '1990-03-29', 'San Diego, Califórnia', 85, 70, 'ativo', 7, 3, false),
+	(3, 'Maggie Shaw', 'Queen Maeve', 'f', 1.80, 75.00, '1989-11-12', 'Seattle, Washington', 90, 85, 'inativo', 15, 2, false),
+	(4, 'John Gillman', 'Homelander', 'm', 1.85, 95.00, '1981-09-11', 'Desconhecido', 100, 95, 'ativo', 50, 0, false),
+	(5, 'Annie January', 'Starlight', 'f', 1.67, 60.00, '1992-06-14', 'Evanston, Illinois', 75, 80, 'ativo', 9, 1, false),
+	(6, 'Kimiko Miyashiro', 'The Female', 'f', 1.60, 55.00, '1991-04-10', 'Tóquio, Japão', 80, 65, 'ativo', 6, 2, false),
+	(7, 'Earving', 'Black Noir', 'm', 1.88, 90.00, '2004-11-29', 'Desconhecido', 95, 70, 'banido', 12, 1, false),
+	(8, 'William Butcher', 'Billy Butcher', 'm', 1.80, 85.00, '1972-03-18', 'Londres, Inglaterra', 80, 90, 'ativo', 20, 4, false),
+	(9, 'Klara Risinger', 'Stormfront', 'f', 1.75, 70.00, '1919-07-15', 'Berlim, Alemanha', 90, 50, 'inativo', 8, 2, false);
 
 UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/8/84/Deep-S4.png' WHERE id_heroi = 1;
 UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/4/4c/A-Train-S4.png' WHERE id_heroi = 2;
-UPDATE herois.heroi SET imagem_heroi = 'https://actionfigurebrasil.com.br/cdn/shop/files/queen-maeve__gallery_63d9a0670d773.jpg?v=1717601699' WHERE id_heroi = 3;
+UPDATE herois.heroi SET imagem_heroi = 'https://preview.redd.it/6ebe3orouj451.jpg?auto=webp&s=75fc7b06a9b2e8658c32a5010b0968a4a2ed9dae' WHERE id_heroi = 3;
 UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/5/5b/Homelander-S4.png' WHERE id_heroi = 4;
 UPDATE herois.heroi SET imagem_heroi = 'https://p2.trrsf.com/image/fget/cf/1200/1600/middle/images.terra.com/2022/09/07/266948152-the-boys-starlight.jpg' WHERE id_heroi = 5;
 UPDATE herois.heroi SET imagem_heroi = 'https://static.wikia.nocookie.net/amazons-the-boys/images/6/6b/Kimiko-S4.png' WHERE id_heroi = 6;
@@ -145,11 +147,14 @@ VALUES
 (9, 17), -- Stormfront: Crimes de guerra
 (9, 18); -- Stormfront: Incitação ao ódio
 
-INSERT INTO HEROIS.MISSOES (ID_MISSAO, NOME_MISSAO, DESCRICAO_MISSAO, RESULTADO, RECOMPENSA)
+INSERT INTO HEROIS.MISSOES (ID_MISSAO, NOME_MISSAO, DESCRICAO_MISSAO, RESULTADO, RECOMPENSA, NIVEL_DIFICULDADE)
 VALUES 
-(1, 'Resgate no Edifício Empire', 'Resgate de reféns no Empire State Building.', 'sucesso', 50),
-(2, 'Neutralização de Bomba', 'Desarmar uma bomba colocada por terroristas.', 'fracasso', 30),
-(3, 'Infiltração no Quartel Inimigo', 'Infiltrar e coletar informações de um quartel inimigo.', 'sucesso', 70);
+(1, 'Resgate no Edifício Empire', 'Resgate de reféns no Empire State Building.', 'sucesso', 5, 8),
+(2, 'Neutralização de Bomba', 'Desarmar uma bomba colocada por terroristas.', 'fracasso', 3, 6),
+(3, 'Infiltração no Quartel Inimigo', 'Infiltrar e coletar informações de um quartel inimigo.', 'sucesso', 7, 10);
+
+INSERT INTO herois.missoes (nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade)
+VALUES ('Exemplo', 'Teste', 'Sucesso', 8, 4);
 
 INSERT INTO HEROIS.HEROI_MISSAO (FK_ID_HEROI_HM, FK_ID_MISSAO_HM)
 VALUES 
@@ -163,8 +168,6 @@ VALUES
 (8, 3), -- Billy Butcher participou da infiltração no quartel inimigo
 (9, 2); -- Stormfront falhou na neutralização de bomba
 
-DROP TRIGGER IF EXISTS atualiza_heroi;
-
 DELIMITER //
 
 CREATE TRIGGER atualiza_heroi
@@ -176,6 +179,41 @@ BEGIN
     ELSEIF NEW.popularidade >= 20 AND (NEW.vitorias - NEW.derrotas) > 5 THEN
 		SET NEW.status_heroi = 'ativo';
 	END IF;
+END//
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER atualiza_heroi_missao
+AFTER INSERT ON herois.heroi_missao
+FOR EACH ROW
+BEGIN
+    DECLARE recompensa INT;
+    DECLARE resultado VARCHAR(10);
+    DECLARE nivel_forca INT;
+    DECLARE popularidade INT;
+
+    -- Obter o resultado e a recompensa da missão
+    SELECT resultado, recompensa INTO resultado, recompensa
+    FROM herois.missoes
+    WHERE id_missao = NEW.fk_id_missao_hm;
+
+    -- Obter os atributos do herói
+    SELECT nivel_forca, popularidade INTO nivel_forca, popularidade
+    FROM herois.heroi
+    WHERE id_heroi = NEW.fk_id_heroi_hm;
+
+    -- Atualizar atributos com base no resultado da missão
+    IF resultado = 'sucesso' THEN
+        UPDATE herois.heroi
+        SET nivel_forca = nivel_forca + recompensa, popularidade = popularidade + recompensa
+        WHERE id_heroi = NEW.fk_id_heroi_hm;
+    ELSE
+        UPDATE herois.heroi
+        SET nivel_forca = nivel_forca - recompensa, popularidade = popularidade - recompensa
+        WHERE id_heroi = NEW.fk_id_heroi_hm;
+    END IF;
 END//
 
 DELIMITER ;
