@@ -16,6 +16,13 @@ async function listarMissoes(nome = '', nivelDificuldade = '') {
             const linha = tabela.insertRow();
 
             const resultadoFormatado = missao.resultado.charAt(0).toUpperCase() + missao.resultado.slice(1).toLowerCase();
+            const heroisResponsaveis = missao.herois_responsaveis 
+                ? `<ul>${missao.herois_responsaveis.split(', ').map(heroi => `<li>${heroi}</li>`).join('')}</ul>`
+                : 'Nenhum herói registrado';
+
+            const imagensHerois = missao.imagens_herois 
+                ? missao.imagens_herois.split(',').map(img => `<img src="${img}" alt="Heroi" class="img-heroi-responsavel">`).join('')
+                : 'Nenhuma imagem registrada';
 
             linha.innerHTML = `
             <td id="btns-lista">
@@ -27,6 +34,12 @@ async function listarMissoes(nome = '', nivelDificuldade = '') {
             <td>${missao.recompensa}</td>
             <td>${resultadoFormatado}</td>
             <td>${missao.nivel_dificuldade}</td>
+            <td>${heroisResponsaveis}</td>
+            <td>
+                <div class="img-herois-responsaveis">
+                    ${imagensHerois}
+                </div>
+            </td>
             `;
         });
     } catch (error) {

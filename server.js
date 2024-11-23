@@ -419,7 +419,7 @@ app.post('/api/crimes', (req, res) => {
 
 // Endpoint para cadastrar uma nova missão
 app.post('/api/missoes', (req, res) => {
-    const { nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade } = req.body;
+    const { nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade, herois_responsaveis } = req.body;
 
     console.log(req.body);
 
@@ -438,16 +438,34 @@ app.post('/api/missoes', (req, res) => {
             return res.status(500).json({ message: "Erro ao cadastrar missão." });
         }
 
-        res.status(201).json({ message: "Missão cadastrada com sucesso." });
+        const idMissao = result.insertId;
+
+        const queryHeroisResp = `
+            INSERT INTO herois.heroi_missao (fk_id_heroi_hm, fk_id_missao_hm)
+            VALUES ?
+        `;
+
+        const heroiValues = herois_responsaveis.map(idHeroi => [idHeroi, idMissao]);
+
+        db.query(queryHeroisResp, [heroiValues], (errorHerois) => {
+            if (errorHerois) {
+                console.error("Erro ao associar heróis à missão: ", errorHerois);
+                return res.status(500).json({ message: "Erro ao associar heróis à missão." });
+            }
+           
+            res.status(201).json({ message: "Missão cadastrada com sucesso." });
+        });
     });
 });
 
 app.get('/api/missoes', (req, res) => {
-    const { nome_heroi, nivel_dificuldade} = req.query;
+    const { nome, nivel_dificuldade} = req.query;
 
     let query = `
-        SELECT m.*
+        SELECT m.*, GROUP_CONCAT(h.nome_heroi SEPARATOR ', ') AS herois_responsaveis, GROUP_CONCAT(h.imagem_heroi SEPARATOR ',') AS imagens_herois
         FROM herois.missoes AS m
+        LEFT JOIN herois.heroi_missao as hm ON m.id_missao = hm.fk_id_missao_hm
+        LEFT JOIN herois.heroi as h ON hm.fk_id_heroi_hm = h.id_heroi
     `;
 
     let conditions = [];
@@ -456,11 +474,18 @@ app.get('/api/missoes', (req, res) => {
         conditions.push(`m.nivel_dificuldade = '${nivel_dificuldade}'`);
     }
 
+    if (nome) {
+        conditions.push(`h.nome_heroi LIKE '%${nome}%'`);
+    }
+    
     if (conditions.length > 0) {
         query += ' WHERE ' + conditions.join(' AND ');
     }
-
-    query += ' ORDER BY m.id_missao';
+    
+    query += `
+        GROUP BY m.id_missao, m.nome_missao, m.descricao_missao, m.resultado, m.recompensa, m.nivel_dificuldade
+        ORDER BY m.id_missao
+    `;
 
     db.query(query, (error, resultado) => {
         if (error) {

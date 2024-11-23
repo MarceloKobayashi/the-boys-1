@@ -90,6 +90,13 @@ td {
     white-space: nowrap;
 }
 
+.img-heroi-responsavel {
+    width: 2.5rem;
+    height: 5rem;
+    margin-right: 5px;
+    object-fit: cover;
+}
+
 th {
     white-space: nowrap;
 }
