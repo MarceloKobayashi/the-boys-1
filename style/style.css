@@ -8,29 +8,24 @@
     font-style: normal;
 }
 
-.btn {
+#iniciar {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
-    margin-bottom: 3rem;
-}
+    width: max-content;
 
-#btn-herois, #btn-crimes, #btn-missoes, #btn-batalha {
-    width: 31.25rem;
-    padding: 2% 9.4%;
-    border-radius: 0.5rem;
-
-    font-size: 1.5rem;
+    border-radius: 1rem;
+    padding: 5rem 7rem;
+    
+    font-size: 7rem;
     font-family: "Nanum Gothic Coding", monospace;
-    font-weight: 400;
+    cursor: pointer;
 
-    display: block;
-    margin: auto;
+    margin-top: 10rem;
 }
 
-#btn-herois:hover, #btn-crimes:hover, #btn-missoes:hover, #btn-batalha:hover {
+#iniciar:hover {
     background-color: black;
-    color: #E5E5E5;
-}
-
-a {
-    text-decoration: none;
+    color: #CCC;
 }

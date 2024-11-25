@@ -1,26 +1,23 @@
 #header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
-    position: relative;
+    text-align: center;
+    padding: 1rem;
+    background-color: #F4F4F4;
 
     margin-bottom: 3rem;
-    margin-top: 2rem;
 }
 
-#btn-home {
+#btn-home, #btn-herois, #btn-batalha, #btn-crimes, #btn-missoes {
     border-radius: 0.5rem;
     padding: 0.6rem 1.2rem;
     
-    margin-left: 2rem;
-
     font-size: 1rem;
     font-family: "Nanum Gothic Coding", monospace;
     cursor: pointer;
+
+    margin-right: 1rem;
 }
 
-#btn-home:hover {
+#btn-home:hover, #btn-herois:hover, #btn-batalha:hover, #btn-crimes:hover, #btn-missoes:hover {
     background-color: black;
     color: #E5E5E5;
 
@@ -30,13 +27,24 @@
     font-size:2rem;
     font-family: "Nanum Gothic Coding", monospace;
     font-weight: 400;
-    font-style: normal;
+    font-style: bold;
+
+    margin-bottom: 2rem;
 
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
     width: max-content;
+}
+
+
+#menu {
+    display: flex;
+    justify-content: center;
+    gap: 9rem;
+
+    margin-top: 5rem;
 }
 
 #div-batalha {

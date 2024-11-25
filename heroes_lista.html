@@ -8,18 +8,30 @@
 </head>
 <body>
     <div id="header">
-        <a href="index.html">
-            <button id="btn-home"><i class="fas fa-home"></i>Home</button>
-        </a>
-        <a href="heroes.html">
-            <button id="btn-herois">Herois</button>
-        </a>
-        <a href="batalha.html">
-            <button id="btn-batalha">Lutar!</button>
-        </a>
-        <h1 id="titulo">Lista de herois</h1>
+        <div>
+            <h1 id="titulo">Trabalho The Boys</h1>
+        </div>
+        <nav id="menu">
+            <a href="index.html">
+                <button id="btn-home"><i class="fas fa-home"></i> Home</button>
+            </a>
+            <a href="heroes_lista.html">
+                <button id="btn-herois">Heróis</button>
+            </a>
+            <a href="crimes.html">
+                <button id="btn-crimes">Crimes</button>
+            </a>
+            <a href="missoes_lista.html">
+                <button id="btn-missoes">Missões</button>
+            </a>
+            <a href="batalha.html">
+                <button id="btn-batalha">Lutar!</button>
+            </a>
+        </nav>
     </div>
     
+    <h2 id="subtitulo">Lista de Heróis</h2>
+
     <div id="filtros">
         <input type="text" id="input-nome" placeholder="Buscar herói por nome.">
         
@@ -38,7 +50,92 @@
         
         <button id="btn-busca-nome-status">Buscar</button>
         <button id="btn-todos">Todos</button>
+        <button id="btn-cadastrar">Cadastrar Heroi</button>
     </div>
+
+    <dialog id="dialog-cadastrar">
+        <h2>Cadastrar Herói</h2>
+
+        <form id="form-cadastrar">
+            <label for="imagem-url">URL da Imagem:</label>
+            <input type="url" name="imagem-url" id="imagem-url" placeholder="Digite a URL da imagem do herói">
+
+            <div class="linha-dupla">
+                <div>
+                    <label for="nome-real">Nome Real:</label>
+                    <input type="text" id="nome-real" name="nome-real" required><br><br>
+                </div>
+                <div>
+                    <label for="nome-heroi">Nome Herói:</label>
+                    <input type="text" id="nome-heroi" name="nome-heroi" required><br><br>
+                </div>
+            </div>
+
+            <div class="linha-tripla">
+                <div>
+                    <label for="sexo">Sexo:</label>
+                    <select id="sexo" name="sexo" required>
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                    </select><br><br>
+                </div>
+                <div>
+                    <label for="altura">Altura (em m):</label>
+                    <input type="number" id="altura" name="altura" min="0.5" max="3" step="0.01" required><br><br>
+                </div>
+                <div>
+                    <label for="peso">Peso (em kg):</label>
+                    <input type="number" id="peso" name="peso" min="30" max="500" required><br><br>
+                </div>
+            </div>
+
+            <div class="linha-dupla">
+                <div>
+                    <label for="data-nascimento">Data de Nascimento:</label>
+                    <input type="date" id="data-nascimento" name="data-nascimento" required><br><br>
+                </div>
+                <div>
+                    <label for="local-nascimento">Local de Nascimento:</label>
+                    <input type="text" id="local-nascimento" name="local-nascimento" required><br><br>
+                </div>
+            </div>
+
+            <div class="linha-dupla">
+                <div>
+                    <label for="nivel-forca">Nível de Força (0 a 100):</label>
+                    <input type="number" id="nivel-forca" name="nivel-forca" min="0" max="100" required><br><br>
+                </div>
+                <div>
+                    <label for="popularidade">Popularidade (0 a 100):</label>
+                    <input type="number" id="popularidade" name="popularidade" min="0" max="100" required><br><br>
+                </div>
+            </div>
+
+            <div>
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                    <option value="banido">Banido</option>
+                </select><br><br>
+            </div>
+
+            <div class="linha-poderes">
+                <div>
+                    <label for="poderes">Poderes:</label>
+                    <input type="text" name="poderes" id="poderes" placeholder="Digite os poderes do herói">
+                </div>
+                <div>
+                    <button type="button" id="btn-adicionar-poder">Adicionar Poder</button>
+                </div>
+            </div>
+
+            <div id="poderes-lista"></div>
+
+            <button type="submit" id="btn-dialog-cadastrar">Cadastrar</button>
+            <button type="button" id="btn-dialog-cadastrar-fechar">X</button>
+        </form>
+    </dialog>
     
     <table id="tabela-herois">
         <thead>

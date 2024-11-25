@@ -7,15 +7,30 @@
     <link rel="stylesheet" href="style/missoes_lista.css">
 </head>
 <body>
-    <div id="cabecalho">
-        <a href="index.html">
-            <button id="btn-home"><i class="fas fa-home"></i>Home</button>
-        </a>
-        <a href="missoes.html">
-            <button id="btn-missoes">Missões</button>
-        </a>
-        <h1 id="titulo">Lista de missões</h1>
+    <div id="header">
+        <div>
+            <h1 id="titulo">Trabalho The Boys</h1>
+        </div>
+        <nav id="menu">
+            <a href="index.html">
+                <button id="btn-home"><i class="fas fa-home"></i> Home</button>
+            </a>
+            <a href="heroes_lista.html">
+                <button id="btn-herois">Heróis</button>
+            </a>
+            <a href="crimes.html">
+                <button id="btn-crimes">Crimes</button>
+            </a>
+            <a href="missoes_lista.html">
+                <button id="btn-missoes">Missões</button>
+            </a>
+            <a href="batalha.html">
+                <button id="btn-batalha">Lutar!</button>
+            </a>
+        </nav>
     </div>
+    
+    <h2 id="subtitulo">Lista de Missões</h2>
 
     <div id="filtros">
         <input type="text" id="input-nome-missao" placeholder="Nome do herói">
@@ -35,7 +50,86 @@
         </select>
         <button id="btn-busca-missoes">Buscar</button>
         <button id="btn-todas-missoes">Mostrar Todas</button>
+        <button id="btn-cadastrar-missao">Cadastrar Missão</button>
     </div>
+
+    <dialog id="dialog-cadastrar-missao" class="modal">
+        <h2>Cadastrar Missão</h2>
+
+        <form id="form-cadastrar-missao">
+            <div class="form-group">
+                <label for="nome-missao">Nome da Missão:</label>
+                <input type="text" id="nome-missao" name="nome-missao" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descricao-missao">Descrição da Missão:</label>
+                <textarea id="descricao-missao" name="descricao-missao" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="recompensa-missao">Recompensa:</label>
+                <select name="recompensa-missao" id="recompensa-missao" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="resultado-missao">Resultado:</label>
+                <select id="resultado-missao" name="resultado-missao" required>
+                    <option value="sucesso">Sucesso</option>
+                    <option value="fracasso">Fracasso</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="nivel-dificuldade">Nível de Dificuldade:</label>
+                <select id="nivel-dificuldade" name="nivel-dificuldade" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+            
+                </select>
+            </div>
+
+            <div class="linha-herois">
+                <div>
+                    <label for="herois">Heróis:</label>
+                    <select id="herois" name="herois" required>
+
+                    </select>
+                </div>
+                <div>
+                    <button type="button" id="btn-adicionar-heroi">Adicionar Herói</button>
+                </div>
+            </div>
+
+            <div id="herois-lista"></div>
+                
+            <button id="btn-dialog-cadastrar" class="btn-confirm">Cadastrar</button>
+            <button type="button" id="btn-dialog-cadastrar-fechar">X</button>
+                    
+        </form>
+    </dialog>
+
+    <section id="missoes-container">
+    </section>
 
     <table id="tabela-missoes">
         <thead>
