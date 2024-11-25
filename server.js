@@ -421,8 +421,6 @@ app.post('/api/crimes', (req, res) => {
 app.post('/api/missoes', (req, res) => {
     const { nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade, herois_responsaveis } = req.body;
 
-    console.log(req.body);
-
     const query = `
         INSERT INTO herois.missoes (nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade)
         VALUES (?, ?, ?, ?, ?)

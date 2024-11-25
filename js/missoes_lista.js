@@ -22,10 +22,34 @@ btnDialogCadastrarMissao.addEventListener("click", async () => {
         const recompensa = document.getElementById("recompensa-missao").value;
         const nivelDificuldade = document.getElementById("nivel-dificuldade").value;
 
-        const heroisSelecionados = Array.from(document.getElementById("herois-lista").getElementsByClassName("heroi-item"))
-                                        .map(item => item.getAttribute("data-id"));
-
         try {
+            const responseHerois = await fetch("http://localhost:3000/api/herois");
+            const herois = await responseHerois.json();
+
+            let heroisFiltrados;
+            if (nivelDificuldade < 5) {
+                heroisFiltrados = herois.filter(
+                    heroi => heroi.nivel_forca >= 40 && heroi.nivel_forca <= 85
+                );
+            } else {
+                heroisFiltrados = herois.filter(heroi => heroi.nivel_forca >= 85);
+            }
+
+            if (heroisFiltrados.length < 3) {
+                alert("Não há heróis disponíveis para esta missão.");
+                return;
+            }
+
+            const heroisSelecionados = [];
+            while(heroisSelecionados.length < 3) {
+                const indexAleatorio = Math.floor(Math.random() * heroisFiltrados.length);
+                const heroi = heroisFiltrados[indexAleatorio];
+
+                if (!heroisSelecionados.includes(heroi.id_heroi)) {
+                    heroisSelecionados.push(heroi.id_heroi);
+                }
+            }
+
             const response = await fetch("http://localhost:3000/api/missoes", {
                 method: "POST",
                 headers: {
@@ -44,11 +68,11 @@ btnDialogCadastrarMissao.addEventListener("click", async () => {
             if (response.ok) {
                 alert("Missão cadastrada com sucesso.");
                 
-                nomeMissao = "";
-                descricaoMissao = "";
-                resultado = "";
-                recompensa = "";
-                nivelDificuldade = "";
+                document.getElementById("nome-missao").value = "";
+                document.getElementById("descricao-missao").value = "";
+                document.getElementById("resultado-missao").value = "";
+                document.getElementById("recompensa-missao").value = "";
+                document.getElementById("nivel-dificuldade").value = "";
                 document.getElementById("herois-lista").innerHTML = "";
             } else {
                 alert("Erro ao cadastrar missão");
@@ -59,57 +83,52 @@ btnDialogCadastrarMissao.addEventListener("click", async () => {
     }
 });
 
-document.getElementById("btn-adicionar-heroi").addEventListener("click", () => {
-    const selectHerois = document.getElementById("herois");
-    const heroiSelecionadoId = selectHerois.value;
-    const heroiSelecionadoNome = selectHerois.options[selectHerois.selectedIndex].textContent;
+document.getElementById("nivel-dificuldade").addEventListener("change", async() => {
+    const nivelDificuldade = parseInt(document.getElementById("nivel-dificuldade").value);
+    
+    try {
+        const response = await fetch("http://localhost:3000/api/herois");
+        const herois = await response.json();
 
-    if (heroiSelecionadoId) {
-        const heroisLista = document.getElementById("herois-lista");
+        let heroisFiltrados;
+        if (nivelDificuldade < 5) {
+            heroisFiltrados = herois.filter(heroi => heroi.nivel_forca >= 40 && heroi.nivel_forca < 85);
+        } else {
+            heroisFiltrados = herois.filter(heroi => heroi.nivel_forca >= 85);
+        }
 
-        const heroiRepetido = Array.from(heroisLista.getElementsByClassName("heroi-item"))
-                                    .some(item => item.getAttribute("data-id") === heroiSelecionadoId);
-
-        if (heroiRepetido) {
-            alert("Este herói já foi adicionado à lista");
+        if (heroisFiltrados.length < 3) {
+            alert("Não há heróis disponíveis para esta missão.");
             return;
         }
 
-        const listItem = document.createElement("div");
-        listItem.classList.add("heroi-item");
-        listItem.textContent = heroiSelecionadoNome;
-        listItem.setAttribute("data-id", heroiSelecionadoId);
+        const heroisSelecionados = [];
+        while (heroisSelecionados.length < 3) {
+            const indexAleatorio = Math.floor(Math.random() * heroisFiltrados.length);
+            const heroi = heroisFiltrados[indexAleatorio];
 
-        const btnRemover = document.createElement("button");
-        btnRemover.textContent = "X";
-        btnRemover.classList.add("btn-remover-heroi");
+            if (!heroisSelecionados.includes(heroi)) {
+                heroisSelecionados.push(heroi);
+            }
+        }
 
-        btnRemover.addEventListener("click", () => {
-            heroisLista.removeChild(listItem);
+        const heroisLista = document.getElementById("herois-lista");
+        heroisLista.innerHTML = "";
+
+        heroisSelecionados.forEach(heroi => {
+            const listItem = document.createElement("div");
+            listItem.classList.add("heroi-item");
+            listItem.textContent = `-${heroi.nome_heroi} (Força: ${heroi.nivel_forca})`;
+            listItem.setAttribute("data-id", heroi.id_heroi);
+
+            heroisLista.appendChild(listItem);
         });
-        
-        listItem.appendChild(btnRemover);
     
-        heroisLista.appendChild(listItem);
-    } else {
-        alert("Por favor, selecione um herói");
+    } catch (error) {
+        console.error("Erro ao buscar heróis: ", error);
+        alert("Erro ao conectar com o servidor");
     }
 });
-
-//Preencher o select com os heróis
-document.addEventListener("DOMContentLoaded", async () => {
-    const response = await fetch(`http://localhost:3000/api/herois`);
-    const herois = await response.json();
-
-    const selectHerois = document.getElementById("herois");
-    herois.forEach(heroi =>  {
-        const option = document.createElement("option");
-        option.value = heroi.id_heroi;
-        option.textContent = heroi.nome_heroi;
-        selectHerois.appendChild(option);
-    });
-});
-
 
 async function listarMissoes(nome = '', nivelDificuldade = '') {
     try {
