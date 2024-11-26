@@ -43,6 +43,7 @@ CREATE TABLE herois.missoes (
     descricao_missao VARCHAR(100),
     resultado VARCHAR(10) NOT NULL CHECK(resultado IN ('sucesso', 'fracasso')),
     recompensa INT NOT NULL CHECK(recompensa BETWEEN 0 AND 10),
+    tipo_recompensa VARCHAR(15) NOT NULL CHECK(tipo_recompensa IN ('popularidade', 'nivel_forca')),
     nivel_dificuldade INT NOT NULL CHECK(nivel_dificuldade BETWEEN 1 AND 10)
 );
 
@@ -147,14 +148,11 @@ VALUES
 (9, 17), -- Stormfront: Crimes de guerra
 (9, 18); -- Stormfront: Incitação ao ódio
 
-INSERT INTO HEROIS.MISSOES (ID_MISSAO, NOME_MISSAO, DESCRICAO_MISSAO, RESULTADO, RECOMPENSA, NIVEL_DIFICULDADE)
+INSERT INTO HEROIS.MISSOES (ID_MISSAO, NOME_MISSAO, DESCRICAO_MISSAO, RESULTADO, RECOMPENSA, TIPO_RECOMPENSA, NIVEL_DIFICULDADE)
 VALUES 
-(1, 'Resgate no Edifício Empire', 'Resgate de reféns no Empire State Building.', 'sucesso', 5, 8),
-(2, 'Neutralização de Bomba', 'Desarmar uma bomba colocada por terroristas.', 'fracasso', 3, 6),
-(3, 'Infiltração no Quartel Inimigo', 'Infiltrar e coletar informações de um quartel inimigo.', 'sucesso', 7, 10);
-
-INSERT INTO herois.missoes (nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade)
-VALUES ('Exemplo', 'Teste', 'Sucesso', 8, 4);
+(1, 'Resgate no Edifício Empire', 'Resgate de reféns no Empire State Building.', 'sucesso', 5, 'popularidade', 8),
+(2, 'Neutralização de Bomba', 'Desarmar uma bomba colocada por terroristas.', 'fracasso', 3, 'nivel_forca', 6),
+(3, 'Infiltração no Quartel Inimigo', 'Infiltrar e coletar informações de um quartel inimigo.', 'sucesso', 7, 'popularidade', 10);
 
 INSERT INTO HEROIS.HEROI_MISSAO (FK_ID_HEROI_HM, FK_ID_MISSAO_HM)
 VALUES 
@@ -179,41 +177,6 @@ BEGIN
     ELSEIF NEW.popularidade >= 20 AND (NEW.vitorias - NEW.derrotas) > 5 THEN
 		SET NEW.status_heroi = 'ativo';
 	END IF;
-END//
-
-DELIMITER ;
-
-DELIMITER //
-
-CREATE TRIGGER atualiza_heroi_missao
-AFTER INSERT ON herois.heroi_missao
-FOR EACH ROW
-BEGIN
-    DECLARE recompensa INT;
-    DECLARE resultado VARCHAR(10);
-    DECLARE nivel_forca INT;
-    DECLARE popularidade INT;
-
-    -- Obter o resultado e a recompensa da missão
-    SELECT resultado, recompensa INTO resultado, recompensa
-    FROM herois.missoes
-    WHERE id_missao = NEW.fk_id_missao_hm;
-
-    -- Obter os atributos do herói
-    SELECT nivel_forca, popularidade INTO nivel_forca, popularidade
-    FROM herois.heroi
-    WHERE id_heroi = NEW.fk_id_heroi_hm;
-
-    -- Atualizar atributos com base no resultado da missão
-    IF resultado = 'sucesso' THEN
-        UPDATE herois.heroi
-        SET nivel_forca = nivel_forca + recompensa, popularidade = popularidade + recompensa
-        WHERE id_heroi = NEW.fk_id_heroi_hm;
-    ELSE
-        UPDATE herois.heroi
-        SET nivel_forca = nivel_forca - recompensa, popularidade = popularidade - recompensa
-        WHERE id_heroi = NEW.fk_id_heroi_hm;
-    END IF;
 END//
 
 DELIMITER ;
