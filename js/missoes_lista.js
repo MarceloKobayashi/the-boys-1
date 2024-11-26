@@ -20,6 +20,7 @@ btnDialogCadastrarMissao.addEventListener("click", async () => {
         const descricaoMissao = document.getElementById("descricao-missao").value;
         const resultado = document.getElementById("resultado-missao").value;
         const recompensa = document.getElementById("recompensa-missao").value;
+        const tipoRecompensa = document.getElementById("tipo-recompensa").value;
         const nivelDificuldade = document.getElementById("nivel-dificuldade").value;
 
         try {
@@ -60,10 +61,13 @@ btnDialogCadastrarMissao.addEventListener("click", async () => {
                     descricao_missao: descricaoMissao,
                     resultado: resultado,
                     recompensa: recompensa,
+                    tipo_recompensa: tipoRecompensa,
                     nivel_dificuldade: nivelDificuldade,
                     herois_responsaveis: heroisSelecionados
                 }),
             });
+
+            console.log(response);
 
             if (response.ok) {
                 alert("Missão cadastrada com sucesso.");
@@ -72,6 +76,7 @@ btnDialogCadastrarMissao.addEventListener("click", async () => {
                 document.getElementById("descricao-missao").value = "";
                 document.getElementById("resultado-missao").value = "";
                 document.getElementById("recompensa-missao").value = "";
+                document.getElementById("tipo-recompensa").value = "";
                 document.getElementById("nivel-dificuldade").value = "";
                 document.getElementById("herois-lista").innerHTML = "";
             } else {
@@ -83,7 +88,7 @@ btnDialogCadastrarMissao.addEventListener("click", async () => {
     }
 });
 
-document.getElementById("nivel-dificuldade").addEventListener("change", async() => {
+document.getElementById("nivel-dificuldade").addEventListener("change", async () => {
     const nivelDificuldade = parseInt(document.getElementById("nivel-dificuldade").value);
     
     try {
@@ -148,6 +153,7 @@ async function listarMissoes(nome = '', nivelDificuldade = '') {
             const linha = tabela.insertRow();
 
             const resultadoFormatado = missao.resultado.charAt(0).toUpperCase() + missao.resultado.slice(1).toLowerCase();
+            const tipoFormatado = missao.tipo_recompensa.charAt(0).toUpperCase() + missao.tipo_recompensa.slice(1).toLowerCase();
             const heroisResponsaveis = missao.herois_responsaveis 
                 ? `<ul>${missao.herois_responsaveis.split(', ').map(heroi => `<li>${heroi}</li>`).join('')}</ul>`
                 : 'Nenhum herói registrado';
@@ -159,11 +165,11 @@ async function listarMissoes(nome = '', nivelDificuldade = '') {
             linha.innerHTML = `
             <td id="btns-lista">
                 <button class="btn-excluir" data-id="${missao.id_missao}">Excluir</button>
-                <button class="btn-editar" data-id="${missao.id_missao}">Editar</button>
             </td>
             <td>${missao.nome_missao}</td>
             <td>${missao.descricao_missao}</td>
             <td>${missao.recompensa}</td>
+            <td>${tipoFormatado}</td>
             <td>${resultadoFormatado}</td>
             <td>${missao.nivel_dificuldade}</td>
             <td>${heroisResponsaveis}</td>
@@ -221,60 +227,6 @@ document.getElementById("tabela-missoes").addEventListener("click", async (event
     }
 });
 
-document.getElementById("tabela-missoes").addEventListener("click", async (event) => {
-    if (event.target && event.target.classList.contains("btn-editar")) {
-        const idMissao = event.target.getAttribute("data-id");
-        try {
-            const response = await fetch(`http://localhost:3000/api/missoes/${idMissao}`);
-            const missao = await response.json();
-
-            document.getElementById("editar-id-missao").value = missao.id_missao;
-            document.getElementById("editar-nome-missao").value = missao.nome_missao;
-            document.getElementById("editar-descricao-missao").value = missao.descricao_missao;
-            document.getElementById("editar-recompensa").value = missao.recompensa;
-            document.getElementById("editar-resultado").value = missao.resultado.toLowerCase();
-            document.getElementById("editar-nivel-dificuldade").value = missao.nivel_dificuldade;
-
-            document.getElementById("editar-missao-dialog").showModal();
-        } catch (error) {
-            console.error("Erro ao buscar dados da missão para edição: ", error);
-        }
-    }
-});
-
-document.getElementById("salvar-edicao-missao").addEventListener("click", async () => {
-    const idMissao = document.getElementById("editar-id-missao").value;
-
-    const missaoAtualizada = {
-        nome_missao: document.getElementById("editar-nome-missao").value,
-        descricao_missao: document.getElementById("editar-descricao-missao").value,
-        recompensa: document.getElementById("editar-recompensa").value,
-        resultado: document.getElementById("editar-resultado").value,
-        nivel_dificuldade: document.getElementById("editar-nivel-dificuldade").value,
-    };
-
-    try {
-        const response = await fetch(`http://localhost:3000/api/missoes/${idMissao}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(missaoAtualizada),
-        });
-
-        if (response.ok) {
-            alert("Missão atualizada com sucesso.");
-            document.getElementById("editar-missao-dialog").close();
-            listarMissoes();
-        } else {
-            alert("Erro ao atualizar missão");
-        }
-    } catch (error) {
-        console.error("Erro ao atualizar missão: ", error);
-    }
-});
-
-document.getElementById("btn-sair-edicao-missao").addEventListener("click", () => {
-    document.getElementById("editar-missao-dialog").close();
-});
 
 document.addEventListener("DOMContentLoaded", () => {
     listarMissoes();

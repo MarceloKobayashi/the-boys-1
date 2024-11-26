@@ -419,15 +419,16 @@ app.post('/api/crimes', (req, res) => {
 
 // Endpoint para cadastrar uma nova missão
 app.post('/api/missoes', (req, res) => {
-    const { nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade, herois_responsaveis } = req.body;
+    console.log("requisicao recebida para cadastrar missão");
+    const { nome_missao, descricao_missao, resultado, recompensa, tipo_recompensa, nivel_dificuldade, herois_responsaveis } = req.body;
 
     const query = `
-        INSERT INTO herois.missoes (nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO herois.missoes (nome_missao, descricao_missao, resultado, recompensa, tipo_recompensa, nivel_dificuldade)
+        VALUES (?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
-        nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade
+        nome_missao, descricao_missao, resultado, recompensa, tipo_recompensa, nivel_dificuldade
     ];
 
     db.query(query, values, (error, result) => {
@@ -450,8 +451,35 @@ app.post('/api/missoes', (req, res) => {
                 console.error("Erro ao associar heróis à missão: ", errorHerois);
                 return res.status(500).json({ message: "Erro ao associar heróis à missão." });
             }
+
+            const ajuste = resultado === "sucesso" ? parseInt(recompensa) : parseInt(-recompensa);
+            let queryUpdateHerois;
+
+            if (tipo_recompensa === "popularidade") {    
+                queryUpdateHerois = `
+                    UPDATE herois.heroi
+                    SET popularidade = LEAST(100, GREATEST(0, popularidade + ?))
+                    WHERE id_heroi IN (?)
+                `;
+            } else if (tipo_recompensa === "nivel_forca") {
+                queryUpdateHerois = `
+                    UPDATE herois.heroi
+                    SET nivel_forca = LEAST(100, GREATEST(0, nivel_forca + ?))
+                    WHERE id_heroi IN (?)
+                `;
+            }
+
+            const valoresUpdate = [ajuste, herois_responsaveis];
+
+            db.query(queryUpdateHerois, valoresUpdate, (errorUpdate) => {
+                if (errorUpdate) {
+                    console.error("Erro ao atualizar heróis após a missão: ", errorUpdate);
+                    return res.status(500).json({ message: "Erro ao atualizar heróis após a missão." });
+                }
+
+                res.status(201).json({ message: "Missão cadastrada com sucesso." });
+            });
            
-            res.status(201).json({ message: "Missão cadastrada com sucesso." });
         });
     });
 });
@@ -516,51 +544,66 @@ app.get('/api/missoes/:id', (req, res) => {
 app.delete('/api/missoes/:id', (req, res) => {
     const idMissao = req.params.id;
 
-    const query = 'DELETE FROM missoes WHERE id_missao = ?';
-    
-    db.query(query, [idMissao], (error, resultado) => {
-
-        if (error) {
-            console.error("Erro ao excluir missao:", error);
-            return res.status(500).send({ message: "Erro ao excluir missão." });
-        }
-
-        if (resultado.affectedRows === 0) {
-            return res.status(404).send({ message: "Missão não encontrada." });
-        }
-
-        res.status(200).send({ message: 'Missão excluída com sucesso' });
-    });
-});
-
-app.put('/api/missoes/:id', (req, res) => {
-    const idMissao = req.params.id;
-
-    const {
-        nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade
-    } = req.body;
-
-    const query = `
-        UPDATE missoes
-        SET nome_missao = ?, descricao_missao = ?, resultado = ?, recompensa = ?, nivel_dificuldade = ?
+    const queryMissao = `
+        SELECT m.recompensa, m.tipo_recompensa, m.resultado, hm.fk_id_heroi_hm
+        FROM missoes m
+        JOIN heroi_missao hm ON m.id_missao = hm.fk_id_missao_hm
         WHERE id_missao = ?
     `;
 
-    const values = [
-        nome_missao, descricao_missao, resultado, recompensa, nivel_dificuldade, idMissao
-    ];
-
-    db.query(query, values, (error, resultado) => {
+    db.query(queryMissao, [idMissao], (error, resultadoMissao) => {
         if (error) {
-            console.error("Erro ao atualizar missão: ", error);
-            return res.status(500).json({ message: "Erro ao atualizar missão." });
+            console.error("Erro ao recuperar missão: ", error);
+            return res.status(500).json({ message: "Erro ao excluir missão." });
         }
 
-        if (resultado.affectedRows === 0) {
+        if (resultadoMissao.length === 0) {
             return res.status(404).json({ message: "Missão não encontrada." });
         }
 
-         res.status(200).json({ message: "Missão atualizada com sucesso." });
+        const recompensa = resultadoMissao[0].recompensa;
+        const tipoRecompensa = resultadoMissao[0].tipo_recompensa;
+        const resultadoM = resultadoMissao[0].resultado;
+        const heroisEnvolvidos = resultadoMissao.map(missao => missao.fk_id_heroi_hm);
+        
+        const query = 'DELETE FROM missoes WHERE id_missao = ?';
+    
+        db.query(query, [idMissao], (error, resultado) => {
+
+            if (error) {
+                console.error("Erro ao excluir missao:", error);
+                return res.status(500).send({ message: "Erro ao excluir missão." });
+            }
+
+            if (resultado.affectedRows === 0) {
+                return res.status(404).send({ message: "Missão não encontrada." });
+            }
+
+            heroisEnvolvidos.forEach((idHeroi) => {
+                let recompensaQuery = '';
+                if (resultadoM === "sucesso") {
+                    recompensaQuery = `
+                        UPDATE herois.heroi
+                        SET ${tipoRecompensa} = LEAST(100, GREATEST(0, ${tipoRecompensa} - ?))
+                        WHERE id_heroi = ?
+                    `;
+                } else if (resultadoM === "fracasso") {
+                    recompensaQuery = `
+                        UPDATE herois.heroi
+                        SET ${tipoRecompensa} = LEAST(100, GREATEST(0, ${tipoRecompensa} + ?))
+                        WHERE id_heroi = ?
+                    `;
+                }
+
+                db.query(recompensaQuery, [recompensa, idHeroi], (errorRecompensa) => {
+                    if (errorRecompensa) {
+                        console.error("Erro ao atualizar status do herói: ", errorRecompensa);
+                    }
+                });
+            });
+
+            res.status(200).send({ message: 'Missão excluída com sucesso' });
+        });
     });
 });
 
