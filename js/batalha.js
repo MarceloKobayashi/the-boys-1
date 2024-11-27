@@ -142,8 +142,35 @@ async function simularMostrarBatalha(heroi1, heroi2) {
     let turno = 0;
     let logs = [];
     
-    let atacante = heroi1.nivel_forca >= heroi2.nivel_forca ? heroi1 : heroi2;
-    let defensor = atacante === heroi1 ? heroi2 : heroi1;
+    let atacante;
+    let defensor;
+
+    if (document.getElementById("heroi1-energetico").checked) {
+        atacante = heroi1;
+        defensor = heroi2;
+    } else if (document.getElementById("heroi2-energetico").checked) {
+        atacante = heroi2;
+        defensor = heroi1;
+    } else {
+        if (heroi1.nivel_forca >= heroi2.nivel_forca) {
+            atacante = heroi1;
+            defensor = heroi2;
+        } else {
+            atacante = heroi2;
+            defensor = heroi1;
+        }
+    }
+
+    if (document.getElementById("heroi1-machucado").checked) {
+        heroi1.vida -= 2;
+    }
+    
+    if (document.getElementById("heroi2-machucado").checked) {
+        heroi2.vida -= 2;
+    }
+
+    const heroi1Vida = heroi1.vida;
+    const heroi2Vida = heroi2.vida;
 
     const todosHerois = await fetch("http://localhost:3000/api/herois").then(res => res.json());
     await Promise.all(todosHerois.map(heroi => {
@@ -168,13 +195,21 @@ async function simularMostrarBatalha(heroi1, heroi2) {
             ? (Math.random() > 0.5 ? 1 : 2)
             : dano;
 
+        const armaEspecialAtacante = document.getElementById(
+            atacante === heroi1 ? "heroi1-arma" : "heroi2-arma"
+        ).checked;
+
+        if (armaEspecialAtacante) {
+            dano += 1;
+        }
+
         if (atacante === heroi1) {
             heroi2.vida -= dano;
         } else {
             heroi1.vida -= dano;
         }
 
-        logs.push(`<div class="log">${atacante === heroi1 ? `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>` : `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>`} causou ${dano} de dano em ${defensor === heroi1 ? `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>` : `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>`}: ${defensor.nome_heroi} agora tem ${defensor.vida}/10 de vida.</div>`);
+        logs.push(`<div class="log">${atacante === heroi1 ? `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>` : `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>`} causou ${dano} de dano em ${defensor === heroi1 ? `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>` : `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>`}: ${defensor.nome_heroi} agora tem ${defensor.vida}/${defensor === heroi1 ? heroi1Vida : heroi2Vida} de vida.</div>`);
         logs.push('<div class="log">-----------------------------------------------------------------------------------------------------</div>');
 
         if (turno % 2 === 0) {
@@ -182,11 +217,11 @@ async function simularMostrarBatalha(heroi1, heroi2) {
             if (Math.random() < chance / 100) {
                 if (heroi1.popularidade > heroi2.popularidade) {
                     heroi2.vida -= 1;
-                    logs.push(`<div class="log">${heroi1.popularidade > heroi2.popularidade ? `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>` : `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>`} recebe aplausos e causa 1 de dano em ${heroi2.nome_heroi}: ${heroi2.nome_heroi} agora tem ${heroi2.vida}/10 de vida.</div>`);
+                    logs.push(`<div class="log">${heroi1.popularidade > heroi2.popularidade ? `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>` : `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>`} recebe aplausos e causa 1 de dano em ${heroi2.nome_heroi}: ${heroi2.nome_heroi} agora tem ${heroi2.vida}/${heroi2Vida} de vida.</div>`);
                     logs.push('<div class="log">-----------------------------------------------------------------------------------------------------</div>');
                 } else {
                     heroi1.vida -= 1;
-                    logs.push(`<div class="log">${heroi2.popularidade > heroi1.popularidade ? `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>` : `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>`} recebe aplausos e causa 1 de dano em ${heroi1.nome_heroi}: ${heroi1.nome_heroi} agora tem ${heroi1.vida}/10 de vida.</div>`);
+                    logs.push(`<div class="log">${heroi2.popularidade > heroi1.popularidade ? `<span class="nome-heroi-vermelho">${heroi2.nome_heroi}</span>` : `<span class="nome-heroi-verde">${heroi1.nome_heroi}</span>`} recebe aplausos e causa 1 de dano em ${heroi1.nome_heroi}: ${heroi1.nome_heroi} agora tem ${heroi1.vida}/${heroi1Vida} de vida.</div>`);
                     logs.push('<div class="log">-----------------------------------------------------------------------------------------------------</div>');
                 }
             }
@@ -260,6 +295,21 @@ async function simularMostrarBatalha(heroi1, heroi2) {
 
     return { vencedor: vencedor.nome_heroi, logs };
 }
+
+const heroi1Energetico = document.getElementById("heroi1-energetico");
+const heroi2Energetico = document.getElementById("heroi2-energetico");
+
+heroi1Energetico.addEventListener("change", () => {
+    if (heroi1Energetico.checked) {
+        heroi2Energetico.checked = false;
+    }
+});
+
+heroi2Energetico.addEventListener("change", () => {
+    if (heroi2Energetico.checked) {
+        heroi1Energetico.checked = false;
+    }
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
     await carregarHerois();
