@@ -185,11 +185,6 @@
     border-collapse: collapse;
 }
 
-#btns-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
 
 .btn-excluir, .btn-editar {
     cursor: pointer;

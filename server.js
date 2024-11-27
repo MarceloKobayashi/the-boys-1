@@ -343,21 +343,55 @@ app.get('/api/crimes/:id', async (req, res) => {
 app.delete('/api/crimes/:id', (req, res) => {
     const idCrime = req.params.id;
 
-    const query = 'DELETE FROM crimes WHERE id_crime = ?';
+    const crimeQuery = `
+        SELECT c.severidade_crime, hc.fk_id_heroi_hc
+        FROM crimes c
+        JOIN heroi_crime hc ON c.id_crime = hc.fk_id_crime_hc
+        WHERE c.id_crime = ?
+    `;
+
+    db.query(crimeQuery, [idCrime], (errorCrime, resultCrime) => {
+        if (errorCrime) {
+            console.error("Eror ao buscar crime e herói: ", errorCrime);
+            return res.status(500).send({ message: "Erro ao buscar crime e herói." });
+        }
+
+        if (resultCrime.length === 0) {
+            return res.status(404).send({ message: "Crime não encontrado ou não associado a um herói." });
+        }
+
+        const { severidade_crime, fk_id_heroi_hc } = resultCrime[0];
+        const popularidadeAdicionar = severidade_crime * 3;
+
+        const updateHeroiQuery = `
+            UPDATE herois.heroi
+            SET popularidade = LEAST(popularidade + ?, 100)
+            WHERE id_heroi = ?
+        `;
+
+        db.query(updateHeroiQuery, [popularidadeAdicionar, fk_id_heroi_hc], (errorHeroi) => {
+            if (errorHeroi) {
+                console.error("Erro ao atualizar popularidade do herói: ", errorHeroi);
+                return res.status(500).send({ message: "Erro ao atualizar popularidade do herói." });
+            }
+
+            const query = 'DELETE FROM crimes WHERE id_crime = ?';
     
-    db.query(query, [idCrime], (error, resultado) => {
+            db.query(query, [idCrime], (error, resultado) => {
 
-        if (error) {
-            console.error("Erro ao excluir crime:", error);
-            return res.status(500).send({ message: "Erro ao excluir crime." });
-        }
+                if (error) {
+                    console.error("Erro ao excluir crime:", error);
+                    return res.status(500).send({ message: "Erro ao excluir crime." });
+                }
 
-        if (resultado.affectedRows === 0) {
-            return res.status(404).send({ message: "Crime não encontrado." });
-        }
+                if (resultado.affectedRows === 0) {
+                    return res.status(404).send({ message: "Crime não encontrado." });
+                }
 
-        res.status(200).send({ message: 'Crime excluído com sucesso' });
-    });
+                res.status(200).send({ message: 'Crime excluído com sucesso' });
+            });
+        });
+    }); 
 });
 
 app.post('/api/crimes', (req, res) => {
