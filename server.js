@@ -453,7 +453,6 @@ app.post('/api/crimes', (req, res) => {
 
 // Endpoint para cadastrar uma nova missão
 app.post('/api/missoes', (req, res) => {
-    console.log("requisicao recebida para cadastrar missão");
     const { nome_missao, descricao_missao, resultado, recompensa, tipo_recompensa, nivel_dificuldade, herois_responsaveis } = req.body;
 
     const query = `
@@ -519,7 +518,7 @@ app.post('/api/missoes', (req, res) => {
 });
 
 app.get('/api/missoes', (req, res) => {
-    const { nome, nivel_dificuldade} = req.query;
+    const { nome, nivel_dificuldade } = req.query;
 
     let query = `
         SELECT m.*, GROUP_CONCAT(h.nome_heroi SEPARATOR ', ') AS herois_responsaveis, GROUP_CONCAT(h.imagem_heroi SEPARATOR ',') AS imagens_herois
@@ -530,10 +529,6 @@ app.get('/api/missoes', (req, res) => {
 
     let conditions = [];
 
-    if (nivel_dificuldade) {
-        conditions.push(`m.nivel_dificuldade = '${nivel_dificuldade}'`);
-    }
-
     if (nome) {
         conditions.push(`h.nome_heroi LIKE '%${nome}%'`);
     }
@@ -541,11 +536,16 @@ app.get('/api/missoes', (req, res) => {
     if (conditions.length > 0) {
         query += ' WHERE ' + conditions.join(' AND ');
     }
-    
+
     query += `
         GROUP BY m.id_missao, m.nome_missao, m.descricao_missao, m.resultado, m.recompensa, m.nivel_dificuldade
-        ORDER BY m.id_missao
     `;
+    
+    if (nivel_dificuldade) {
+        query += ` ORDER BY m.nivel_dificuldade ${nivel_dificuldade}`;
+    } else {
+        query += `ORDER BY m.id_missao`;
+    }
 
     db.query(query, (error, resultado) => {
         if (error) {
