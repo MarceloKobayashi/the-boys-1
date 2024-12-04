@@ -61,10 +61,11 @@
       - **Status**: Select
       - **N° de Vitórias e Derrotas**: Number
       - **Poderes**: Text - Não necessário
-================================================================================
+---
 ![Tela de Heróis](https://github.com/user-attachments/assets/615f4d97-6c90-4c09-b6a2-d3e1f937065d)
+---
 ![Cadastro de Heróis](https://github.com/user-attachments/assets/89302bf3-3704-4202-8119-b69732f2aad4)
-
+---
 
 ## Tela de Crimes
 - Exibe uma tela com todos os crimes cadastrados no banco de dados um embaixo do outro com as seguintes características:
@@ -92,10 +93,11 @@
   - **Deletar** um crime a partir um botão que fica ao lado do nome do crime:
     - **Deletar**: Para deletar um crime, precisa ter passado no mínimo 6 anos desde o ocorrido. Se tal condição não for cumprida, abre um alerta avisando que o crime não pode ser deletado, caso contrário, abre um alerta para confirmar a exclusão do crime do banco de dados. Ao deletar, o herói recebe de volta a popularidade.
 
-============================================================================================
+---
 ![Tela de Crimes](https://github.com/user-attachments/assets/055ed3b6-039e-4509-93cb-982ea9b78c07)
+---
 ![Cadastro de Crimes](https://github.com/user-attachments/assets/ca828d05-f00f-411b-a6bb-bf49be86f444)
-
+---
 
 ## Tela de Missões
 - Exibe uma tela com todas as missões cadastradas no banco de dados uma embaixo da outra com as seguintes características:
@@ -128,10 +130,11 @@
       + Missão 1: Sucesso, 3 de Popularidade -- Ao apagar os heróis perdem 3 de popularidade.
       + Missão 2: Fracasso, 5 de Força -- Ao apagar, os heróis ganham 5 de força.
 
-===========================================================================================
+---
 ![Tela de Missões](https://github.com/user-attachments/assets/b9c51929-7818-47a5-acf8-ecc5209aebaf)
+---
 ![Cadastro de Missões](https://github.com/user-attachments/assets/18aa4ac5-3699-4570-aa31-529de5ecbf6b)
-
+---
 
 ## Tela de Batalha
 - A batalha faz com que ambos os heróis percam força e que o vencedor ganha popularidade, enquanto o perdedor perde popularidade.
@@ -162,8 +165,9 @@
  
 - Ao fechar o dialog da batalha, volta para a tela de heróis, mostrando os heróis que acabaram de batalhar em destaque, com seus dados atualizados(popularidade e força) e com seus números de vitórias e derrotas atualizados também.
 
-===========================================================================================
+---
 ![Tela de Batalha](https://github.com/user-attachments/assets/eb85f352-0653-414c-a94d-e6c45f3dd91c)
+---
 
 # Documentação
 - Todos os códigos JavaScript estão comentados para informar o que cada função faz.
@@ -179,7 +183,9 @@
   - **heroi_missao**: Para ligar heróis às suas missões.
 
 - **Modelo Físico**
+---
 ![Banco de Dados](https://github.com/user-attachments/assets/b77be69a-1342-48f9-997e-8de51615ec32)
+---
 
 ## Backend
 - Foi utilizado o nodeJS para realizar a comunicação entre o banco de dados e o frontend.
