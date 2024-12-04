@@ -119,6 +119,36 @@
       + Missão 1: Sucesso, 3 de Popularidade -- Ao apagar os heróis perdem 3 de popularidade.
       + Missão 2: Fracasso, 5 de Força -- Ao apagar, os heróis ganham 5 de força.
 
+## Tela de Batalha
+- A batalha faz com que ambos os heróis percam força e que o vencedor ganha popularidade, enquanto o perdedor perde popularidade.
+- Exibe uma tela com dois lados idênticos com um botão de simular batalha no meio, em cada lado tem:
+  - **Select** preenchido com os heróis cadastrados no banco de dados, para escolher o herói que vai batalhar.
+  - **Informações do Herói**: Se nenhum herói for escolhido os dados ficam '???'.
+    - **Nome do Herói**
+    - **Força**
+    - **Popularidade**
+    - **Vitórias**
+    - **Derrotas**
+
+- Assim que selecionar os heróis, é realizada uma consulta ao banco de dados para preencher os campos com os dados dos heróis.
+- A batalha utiliza das características do herói para calcular o resultado:
+  - **Força**: O herói com o nível de força maior, pode causar 1 ou 2 de dano, já o mais fraco pode causar 0.5 ou 1 de dano. Além de que o mais forte começa atacando.
+  - **Popularidade**: O herói mais popular tem uma chance de receber apoio da plateia e causar 1 de dano no outro.
+ 
+- Além de utilizar os dados dos heróis, existem 3 opções para deixar a batalha mais equilibrada:
+  - **Arma Especial**: Aumenta o dano que o herói causa em 1 de dano. - Ambos podem usar ao mesmo tempo.
+  - **Energético**: Faz o herói começar atacando, mesmo sendo mais fraco. - Apenas um pode tomar.
+  - **Machucado**: Faz a vida do herói diminuir de 10 para 8. - Ambos podem estar ao mesmo tempo.
+ 
+- Depois de selecionar os heróis que irão batalhar e selecionar os modificadores, ao apertar em 'Simular Batalha', abre um dialog que registra a batalha.
+  - **Logs de Ataque**: Mostra quem atacou, quanto de dano causou, quem recebeu e a vida que o receptor do ataque ficou (Ex.: 6/10).
+  - **Logs da Plateia**: Mostra quem recebeu ajuda, quanto de dano a plateia causou, quem recebeu e a vida que o receptor do ataque da plateia ficou.
+  - **Vencedor**: Mostra o herói vencedor.
+  - **Status Final**: Mostra a força e a popularidade dos heróis após a batalha.
+ 
+- Ao fechar o dialog da batalha, volta para a tela de heróis, mostrando os heróis que acabaram de batalhar em destaque, com seus dados atualizados(popularidade e força) e com seus números de vitórias e derrotas atualizados também.
+    
+
 
 
 
