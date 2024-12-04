@@ -387,11 +387,11 @@ th {
     flex: 0 0 30%;
 }
 
-#poderes {
+#poderes-editar {
     width: 100%;
 }
 
-#btn-adicionar-poder {
+#btn-adicionar-poder-editar {
     width: 80%;
 
     cursor: pointer;
@@ -401,16 +401,16 @@ th {
     font-family: "Nanum Gothic Coding", monospace;
 }
 
-#btn-adicionar-poder:hover {
+#btn-adicionar-poder-editar:hover {
     background-color: black;
     color: #CCC;
 }
 
-#poderes-lista {
+#poderes-lista-editar {
     gap: 1rem;
 }
 
-#poderes-lista span {
+#poderes-lista-editar span {
     display: flex;
 
     margin-right: 1rem;
@@ -418,7 +418,7 @@ th {
     font-family: "Nanum Gothic Coding", monospace;
 }
 
-#poderes-lista span button {
+#poderes-lista-editar span button {
     cursor: pointer;
     border-radius: 0.3125rem;
 
@@ -428,6 +428,6 @@ th {
     font-family: "Nanum Gothic Coding", monospace;
 }
 
-#poderes-lista span button:hover {
+#poderes-lista-editar span button:hover {
     background-color: red;
 }

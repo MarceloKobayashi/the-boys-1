@@ -260,8 +260,11 @@ document.getElementById("tabela-herois").addEventListener("click", async (event)
             document.getElementById("editar-vitorias").value = heroi.vitorias;
             document.getElementById("editar-derrotas").value = heroi.derrotas;
 
-            const poderesLista = document.getElementById("poderes-lista");
+            const poderesLista = document.getElementById("poderes-lista-editar");
             poderesLista.innerHTML = "";
+
+            console.log("Poderes recebidos:", heroi.poderes);
+            console.log("Elemento poderes-lista:", poderesLista);
 
             if (heroi.poderes && Array.isArray(heroi.poderes)) {
                 heroi.poderes.forEach((poder) => {
@@ -287,12 +290,12 @@ document.getElementById("tabela-herois").addEventListener("click", async (event)
     }
 });
 
-document.getElementById("btn-adicionar-poder").addEventListener("click", () => {
-    const poderInput = document.getElementById("poderes");
+document.getElementById("btn-adicionar-poder-editar").addEventListener("click", () => {
+    const poderInput = document.getElementById("poderes-editar");
     const poderValor = poderInput.value.trim();
 
     if (poderValor) {
-        const poderesLista = document.getElementById("poderes-lista");
+        const poderesLista = document.getElementById("poderes-lista-editar");
         const novoPoder = document.createElement("span");
 
         novoPoder.textContent = "-" + poderValor;
@@ -329,7 +332,7 @@ document.getElementById("salvar-edicao").addEventListener("click", async () => {
     };
 
     const poderes = [];
-    const poderElementos = document.querySelectorAll("#poderes-lista span");
+    const poderElementos = document.querySelectorAll("#poderes-lista-editar span");
     poderElementos.forEach(poderElemento => {
         let poder = poderElemento.textContent.slice(1)
         poderes.push(poder.slice(0, -1));
