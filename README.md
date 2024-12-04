@@ -187,7 +187,16 @@
 
 # Como Executar
 1) Faça um git clone nesse repositório.
-2) Faça o npm install do express, cors, mysql
+2) Faça o npm install do express, cors, mysql, node e dotenv, cujas versões estão no package.json.
+3) Crie um arquivo .env para colocar as informações do banco de dados da sua máquina onde será inserido os dados do arquivo DB.txt, nele devem estar:
+   - DB_HOST={coloque o host do banco de dados}
+   - DB_PORT={coloque a porta desse banco de dados}
+   - DB_USER={usuário do banco de dados}
+   - DB_PASS={senha do usuário}
+   - DB_DATABASE=herois
+4) Acesse o MySQL Workbench e rode o conteúdo do arquivo DB.txt para criar o banco de dados.
+5) Rode no terminal do vscode o seguinte comando: 'node .\server.js' para iniciar a conexão do frontend com o banco de dados.
+6) Inicie o liveserver do index.html.
 
 
 
