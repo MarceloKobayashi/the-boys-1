@@ -138,7 +138,7 @@ document.getElementById("btn-batalhar").addEventListener("click", async () => {
     document.getElementById("fechar-dialog").addEventListener("click", async() => {
         dialog.close();
 
-        window.location.href = "heroes_lista.html";
+        window.location.href = "herois.html";
     });
 
 });
