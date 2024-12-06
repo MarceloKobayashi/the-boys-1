@@ -510,6 +510,13 @@ app.post('/api/missoes', (req, res) => {
                     return res.status(500).json({ message: "Erro ao atualizar heróis após a missão." });
                 }
 
+                console.log(query);
+                console.log(values);
+                console.log(queryHeroisResp);
+                console.log(heroiValues);
+                console.log(queryUpdateHerois);
+                console.log(valoresUpdate);
+
                 res.status(201).json({ message: "Missão cadastrada com sucesso." });
             });
            
