@@ -8,6 +8,7 @@ btnCadastroFechar.addEventListener("click", () => {
     dialogCadastrar.close();
 });
 
+//Função para pegar os dados do dialog e mandar uma request para o server.js cadastrar o herói no bd
 const btnDialogCadastrar = document.getElementById("btn-dialog-cadastrar");
 btnDialogCadastrar.addEventListener("click", async () => {
     const confirmar = confirm("Tem certeza que deseja cadastrar este herói?");
@@ -42,6 +43,7 @@ btnDialogCadastrar.addEventListener("click", async () => {
         poderInput.forEach(input => poderes.push(input.textContent.slice(0, -1)));
 
         try {
+            //Pede ao server.js
             const response = await fetch("http://localhost:3000/api/herois", {
                 method: "POST",
                 headers: {
@@ -91,6 +93,7 @@ btnDialogCadastrar.addEventListener("click", async () => {
     }
 });
 
+//Função para adicionar os poderes ao campo 'poder' no dialog
 document.getElementById("btn-adicionar-poder").addEventListener("click", () => {
     const poderInput = document.getElementById("poderes");
     const poderValor = poderInput.value.trim();
@@ -120,8 +123,10 @@ document.getElementById("poderes").addEventListener("keydown", (event) => {
     }
 });
 
+//Lista os heróis com filtros ao fazer uma request para o server.js
 async function listarHerois(nome = '', status = '', popularidade = '') {
     try {
+        //Pede ao server.js
         const url = new URL('http://localhost:3000/api/herois');
         
         if (nome) url.searchParams.append('nome', nome);
@@ -205,6 +210,7 @@ document.getElementById("input-nome").addEventListener("keydown", (event) => {
     }
 });
 
+//Deleta o herói ao fazer uma request ao server.js para o banco de dados
 document.getElementById("tabela-herois").addEventListener("click", async (event) => {
     if (event.target && event.target.classList.contains("btn-excluir")) {
 
@@ -236,7 +242,7 @@ document.getElementById("tabela-herois").addEventListener("click", async (event)
     }
 });
 
-
+//Abre um dialog com as informações do herói específico ao pedir seus dados para o server.js
 document.getElementById("tabela-herois").addEventListener("click", async (event) => {
     if (event.target && event.target.classList.contains("btn-editar")) {
         const idHeroi = event.target.getAttribute("data-id");
@@ -290,6 +296,7 @@ document.getElementById("tabela-herois").addEventListener("click", async (event)
     }
 });
 
+//Escreve os poderes no dialog para serem usados
 document.getElementById("btn-adicionar-poder-editar").addEventListener("click", () => {
     const poderInput = document.getElementById("poderes-editar");
     const poderValor = poderInput.value.trim();
@@ -312,6 +319,7 @@ document.getElementById("btn-adicionar-poder-editar").addEventListener("click", 
     }
 });
 
+//Edita o herói com as informações alteradas no dialog, usando o server.js
 document.getElementById("salvar-edicao").addEventListener("click", async () => {
     const idHeroi = document.getElementById("editar-id").value;
 

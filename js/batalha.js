@@ -1,3 +1,4 @@
+//Carrega os heróis registrados
 async function carregarHerois() {
     try {
         const response = await fetch("http://localhost:3000/api/herois");
@@ -13,6 +14,7 @@ async function carregarHerois() {
     }
 }
 
+//Preenche os selects com os heróis registrados
 function preencherSelect(selectId, herois, imagemId, nomeId, dadosId) {
     const select = document.getElementById(selectId);
     select.innerHTML = "";
@@ -45,6 +47,7 @@ function preencherSelect(selectId, herois, imagemId, nomeId, dadosId) {
     });
 }
 
+//Mostra o herói selecionado com suas informações e foto
 function mostraHeroi(selectId, imagemId, nomeId, dadosId) {
     const select = document.getElementById(selectId);
     const opcaoEscolhida = select.options[select.selectedIndex];
@@ -99,6 +102,7 @@ function mostraHeroi(selectId, imagemId, nomeId, dadosId) {
     `;
 }
 
+//Pega os heróis selecionados para batalhar
 document.getElementById("btn-batalhar").addEventListener("click", async () => {
 
     const heroi1Id = document.getElementById("select-heroi1").value;
@@ -122,6 +126,7 @@ document.getElementById("btn-batalhar").addEventListener("click", async () => {
     heroi1.vida = 10;
     heroi2.vida = 10;
 
+    //Chama a função para fazer a batalha
     const resultado = await simularMostrarBatalha(heroi1, heroi2);
 
     const dialog = document.getElementById("dialog-content");
@@ -138,6 +143,7 @@ document.getElementById("btn-batalhar").addEventListener("click", async () => {
 
 });
 
+//Faz uma batalha baseada em turnos e mostra os turnos num dialog
 async function simularMostrarBatalha(heroi1, heroi2) {
     let turno = 0;
     let logs = [];

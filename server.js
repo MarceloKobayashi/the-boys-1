@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+//Importar o express, funções do bd e o cors
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
@@ -7,6 +8,7 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
+//Conectar com o banco de dados da minha máquina com os dados do .env
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -24,6 +26,7 @@ db.connect((err) => {
 app.use(cors({ origin: 'http://127.0.0.1:5500' }));
 app.use(express.json());
 
+//Inserir heróis com seus poderes no banco de dados
 app.post('/api/herois', (req, res) => {
     const { 
         imagem_heroi, nome_real, nome_heroi, sexo, altura, peso, data_nasc, local_nasc,
@@ -48,6 +51,7 @@ app.post('/api/herois', (req, res) => {
             return res.status(500).json({ message: "Erro ao cadastrar herói." });
         }
 
+        //Pega o id do herói recém criado para relacionar os poderes
         const id_heroi = resultado.insertId;
 
         if (poderes && poderes.length > 0) {
@@ -56,6 +60,7 @@ app.post('/api/herois', (req, res) => {
                 VALUES (?, ?)
             `;
 
+            //Insere cada poder individualmente
             poderes.forEach(poder => {
                 db.query(poderQuery, [poder, id_heroi], (err, result) => {
                     if (err) {
@@ -70,6 +75,7 @@ app.post('/api/herois', (req, res) => {
 
 });
 
+//Pega todos os heróis e seus poderes registrados no banco de dados
 app.get('/api/herois', (req, res) => {
     const { nome, status, popularidade } = req.query;
     let query = `
@@ -80,6 +86,7 @@ app.get('/api/herois', (req, res) => {
 
     let conditions = [];
 
+    //Filtro dos heróis
     if (nome) {
         conditions.push(`(nome_heroi LIKE '%${nome}%' OR nome_real LIKE '%${nome}%')`);
     }
@@ -153,6 +160,7 @@ app.get('/api/herois/:id', (req, res) => {
 
 });
 
+//Editar as informações de um herói e seus poderes no banco de dados
 app.put('/api/herois/:id', (req, res) => {
     const idHeroi = req.params.id;
 
@@ -215,6 +223,8 @@ app.put('/api/herois/:id', (req, res) => {
     });
 });
 
+//Deletar um herói do banco de dados
+//Obs.: Já que as tabelas são DELETE CASCADE, todas as referências que tenham o id desse herói são deletadas também
 app.delete('/api/herois/:id', (req, res) => {
     const idHeroi = req.params.id;
 
@@ -235,7 +245,7 @@ app.delete('/api/herois/:id', (req, res) => {
     });
 });
 
-//CRIMES
+//Pega todos os crimes do banco de dados.
 app.get('/api/crimes', (req, res) => {
     const { nome_heroi, severidade, data } = req.query;
 
@@ -299,47 +309,7 @@ app.get('/api/crimes', (req, res) => {
     });
 });
 
-//Pegar um crime específico
-app.get('/api/crimes/:id', async (req, res) => {
-    const id_crime = req.params.id;
-    
-    const query = `
-        SELECT c.id_crime, c.nome_crime, c.descricao_crime, c.data_crime, c.severidade_crime,
-            h.id_heroi, h.imagem_heroi, h.nome_heroi
-        FROM crimes c
-        LEFT JOIN heroi_crime hc ON c.id_crime = hc.fk_id_crime_hc
-        LEFT JOIN heroi h ON hc.fk_id_heroi_hc = h.id_heroi
-        WHERE c.id_crime = ?
-    `;
-
-    db.query(query, [id_crime], (error, resultado) => {
-        if (error) {
-            console.error("Erro ao buscar o crime: ", error);
-            return res.status(500).json({ message: "Erro ao buscar o crime." });
-        }
-
-        if (resultado.length === 0) {
-            return res.status(404).json({ message: "Crime não encontrado." });
-        }
-
-        const crime = {
-            id_crime: resultado[0].id_crime,
-            nome_crime: resultado[0].nome_crime,
-            descricao_crime: resultado[0].descricao_crime,
-            data_crime: resultado[0].data_crime,
-            severidade_crime: resultado[0].severidade_crime,
-            herois: resultado.map(row => ({
-                id_heroi: row.id_heroi,
-                nome_heroi: row.nome_heroi,
-                imagem_heroi: row.imagem_heroi
-            }))
-        };
-
-        res.json(crime);
-    });
-
-});
-
+//Deleta um crime do banco de dados
 app.delete('/api/crimes/:id', (req, res) => {
     const idCrime = req.params.id;
 
@@ -363,6 +333,7 @@ app.delete('/api/crimes/:id', (req, res) => {
         const { severidade_crime, fk_id_heroi_hc } = resultCrime[0];
         const popularidadeAdicionar = severidade_crime * 3;
 
+        //Retira a punição do herói que tinha feito o crime
         const updateHeroiQuery = `
             UPDATE herois.heroi
             SET popularidade = LEAST(popularidade + ?, 100)
@@ -394,6 +365,7 @@ app.delete('/api/crimes/:id', (req, res) => {
     }); 
 });
 
+//Insere um crime e o herói que o realizou no banco de dados
 app.post('/api/crimes', (req, res) => {
 
     const { nome_crime, descricao_crime, data_crime, severidade_crime, id_heroi } = req.body;
@@ -408,8 +380,9 @@ app.post('/api/crimes', (req, res) => {
             console.error("Erro ao cadastrar crime: ", error);
             return res.status(500).json({ message: "Erro ao cadastrar crime." });
         }
-
-        const crimeId = resultado.insertId; //Pega o ID do último registro inserido
+        
+        //Pega o ID do último crime inserido para relacionar a um herói
+        const crimeId = resultado.insertId; 
         const heroiQuery = `
             INSERT INTO heroi_crime (fk_id_heroi_hc, fk_id_crime_hc)
             VALUES (?, ?)
@@ -421,6 +394,7 @@ app.post('/api/crimes', (req, res) => {
                 return res.status(500).json({ message: "Erro ao associar crime ao herói." });
             }
 
+            //Pune o herói criminoso ao reduzir sua popularidade
             const popularidadeQuery = `
                 SELECT popularidade FROM heroi WHERE id_heroi = ?
             `;
@@ -451,7 +425,7 @@ app.post('/api/crimes', (req, res) => {
     });
 });
 
-// Endpoint para cadastrar uma nova missão
+//Insere uma missão e seus heróis responsáveis no banco de dados
 app.post('/api/missoes', (req, res) => {
     const { nome_missao, descricao_missao, resultado, recompensa, tipo_recompensa, nivel_dificuldade, herois_responsaveis } = req.body;
 
@@ -470,6 +444,7 @@ app.post('/api/missoes', (req, res) => {
             return res.status(500).json({ message: "Erro ao cadastrar missão." });
         }
 
+        //Pega o id da missão para relacionar aos heróis
         const idMissao = result.insertId;
 
         const queryHeroisResp = `
@@ -488,6 +463,7 @@ app.post('/api/missoes', (req, res) => {
             const ajuste = resultado === "sucesso" ? parseInt(recompensa) : parseInt(-recompensa);
             let queryUpdateHerois;
 
+            //Adiciona uma recompensa(positiva ou negativa) para os heróis dependendo do resultado
             if (tipo_recompensa === "popularidade") {    
                 queryUpdateHerois = `
                     UPDATE herois.heroi
@@ -524,6 +500,7 @@ app.post('/api/missoes', (req, res) => {
     });
 });
 
+//Pega todas as missões e seus heróis responsáveis registrados no banco de dados
 app.get('/api/missoes', (req, res) => {
     const { nome, nivel_dificuldade } = req.query;
 
@@ -563,25 +540,7 @@ app.get('/api/missoes', (req, res) => {
     });
 });
 
-app.get('/api/missoes/:id', (req, res) => {
-    const missionId = req.params.id;
-
-    const query = `SELECT * FROM missoes WHERE id_missao = ?`;
-
-    db.query(query, [missionId], (error, result) => {
-        if (error) {
-            console.error("Erro ao buscar missão:", error);
-            return res.status(500).json({ message: "Erro ao buscar missão." });
-        }
-
-        if (result.length === 0) {
-            return res.status(404).json({ message: "Missão não encontrada." });
-        }
-
-        res.json(result[0]);
-    });
-});
-
+//Deleta uma missão do banco de dados
 app.delete('/api/missoes/:id', (req, res) => {
     const idMissao = req.params.id;
 
@@ -620,6 +579,7 @@ app.delete('/api/missoes/:id', (req, res) => {
                 return res.status(404).send({ message: "Missão não encontrada." });
             }
 
+            //Retira a recompensa obtida pelos heróis
             heroisEnvolvidos.forEach((idHeroi) => {
                 let recompensaQuery = '';
                 if (resultadoM === "sucesso") {
@@ -648,6 +608,7 @@ app.delete('/api/missoes/:id', (req, res) => {
     });
 });
 
+//Atualiza o herói após uma batalha
 app.put('/api/batalha/:id', async (req, res) => {
     const idHeroi = req.params.id;
 

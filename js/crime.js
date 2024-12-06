@@ -1,3 +1,4 @@
+//Lista todos os crimes do banco de dados usando o server.js como endpoint
 async function listarCrimes(nome_heroi = '', severidade = '', data = '') {
     try {
         const url = new URL('http://localhost:3000/api/crimes');
@@ -65,6 +66,7 @@ document.getElementById("input-nome").addEventListener("keydown", (event) => {
     }
 });
 
+//Coloca no select de cadastro de crime todos os heróis do banco de dados usando o server.js
 async function carregarHeroisSelect() {
     try {
         const response = await fetch("http://localhost:3000/api/herois");
@@ -85,6 +87,7 @@ async function carregarHeroisSelect() {
     }
 }
 
+//Deleta o crime usando o server.js
 document.getElementById("tabela-crimes").addEventListener("click", async (event) => {
     if (event.target && event.target.classList.contains("btn-excluir")) {
         
@@ -142,6 +145,7 @@ document.getElementById("btn-dialog-cadastrar-fechar").addEventListener("click",
     document.getElementById("dialog-cadastrar").close();
 });
 
+//Cadastra um crime no banco de dados
 document.getElementById("form-cadastrar").addEventListener("submit", async (event) => {
     event.preventDefault();
 

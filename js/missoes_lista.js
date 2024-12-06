@@ -11,6 +11,7 @@ btnFecharCadastro.addEventListener("click", () => {
     dialogCadastrarMissao.close();
 });
 
+//Cadastra uma missão no banco de dados usando o endpoint do server.js
 const btnDialogCadastrarMissao = document.getElementById("btn-dialog-cadastrar");
 btnDialogCadastrarMissao.addEventListener("click", async () => {
     const confirmar = confirm("Tem certeza que deseja cadastrar esta missão?");
@@ -88,6 +89,7 @@ btnDialogCadastrarMissao.addEventListener("click", async () => {
     }
 });
 
+//Função para escolher aleatoriamente os heróis recomendados para cada missão dependendo do nivel de dificuldade dela
 document.getElementById("nivel-dificuldade").addEventListener("change", async () => {
     const nivelDificuldade = parseInt(document.getElementById("nivel-dificuldade").value);
     
@@ -135,6 +137,7 @@ document.getElementById("nivel-dificuldade").addEventListener("change", async ()
     }
 });
 
+//Função para listar as missões do banco de dados usando o endpoint
 async function listarMissoes(nome = '', nivelDificuldade = '') {
     try {
         const url = new URL('http://localhost:3000/api/missoes');
@@ -206,7 +209,7 @@ document.getElementById("input-nome-missao").addEventListener("keydown", (event)
     }
 });
 
-
+//Exclui uma missão do banco de dados usando um endpoint do server.js
 document.getElementById("tabela-missoes").addEventListener("click", async (event) => {
     if (event.target && event.target.classList.contains("btn-excluir")) {
         const idMissao = event.target.getAttribute("data-id");
