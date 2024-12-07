@@ -309,6 +309,42 @@ app.get('/api/crimes', (req, res) => {
     });
 });
 
+//Pegar um crime específico
+app.get('/api/crimes/:id', async (req, res) => {
+    const id_crime = req.params.id;
+    
+    const query = `
+        SELECT c.id_crime, c.nome_crime, c.descricao_crime, c.data_crime, c.severidade_crime,
+            h.id_heroi, h.imagem_heroi, h.nome_heroi
+        FROM crimes c
+        LEFT JOIN heroi_crime hc ON c.id_crime = hc.fk_id_crime_hc
+        LEFT JOIN heroi h ON hc.fk_id_heroi_hc = h.id_heroi
+        WHERE c.id_crime = ?
+    `;
+    db.query(query, [id_crime], (error, resultado) => {
+        if (error) {
+            console.error("Erro ao buscar o crime: ", error);
+            return res.status(500).json({ message: "Erro ao buscar o crime." });
+        }
+        if (resultado.length === 0) {
+            return res.status(404).json({ message: "Crime não encontrado." });
+        }
+        const crime = {
+            id_crime: resultado[0].id_crime,
+            nome_crime: resultado[0].nome_crime,
+            descricao_crime: resultado[0].descricao_crime,
+            data_crime: resultado[0].data_crime,
+            severidade_crime: resultado[0].severidade_crime,
+            herois: resultado.map(row => ({
+                id_heroi: row.id_heroi,
+                nome_heroi: row.nome_heroi,
+                imagem_heroi: row.imagem_heroi
+            }))
+        };
+        res.json(crime);
+    });
+});
+
 //Deleta um crime do banco de dados
 app.delete('/api/crimes/:id', (req, res) => {
     const idCrime = req.params.id;
